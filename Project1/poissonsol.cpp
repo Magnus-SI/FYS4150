@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fstream>
 #include <iomanip>
+#include <math.h>
 using namespace std;
 
 ofstream ofile;
@@ -69,12 +70,27 @@ void backward_optim(double *v, double *gt, double *dt, int N){
   }
 }
 
+double compute_eps(int n, double *u_array, double *v_array){
+	double eps_max, eps;
+	eps_max = 0;
+	for(int i=0; i<n; i++){
+		eps = fabs((v_array[i] - u_array[i])/u_array[i]);
+		if (eps > eps_max){
+			eps_max = eps;
+			}
+		}
+  cout << "n = " << n << endl;
+	cout << "Max Relative error eps_max: " << eps_max << endl;
+  cout << "log10(eps_max) = " << log10(eps_max) << endl;
+  return 0;
+	}
+
 int main(int argc, char* argv[]){
   int N = atoi(argv[1]);
   char *ofilename;
   ofilename = argv[2];
 
-  init(N);      //initialize constants
+  init(N);      //initialize constantsreturn
   double *gt = new double[N];
   double *dt = new double[N];
   double *v = new double[N];
@@ -87,6 +103,8 @@ int main(int argc, char* argv[]){
     ofile << setw(15) << setprecision(8) << x[i] <<"," << u[i] << "," << v[i] << endl;
   }
   ofile.close();
+
+  compute_eps(N, u, v);
 
   return 0;
 }
