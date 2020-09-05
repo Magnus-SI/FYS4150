@@ -3,8 +3,9 @@
 #include <fstream>
 #include <iomanip>
 #include <math.h>
-//#include <ctime>
+#include "armadillo"
 #include "time.h"
+using namespace arma;
 using namespace std;
 
 ofstream ofile;
@@ -72,11 +73,11 @@ void backward_optim(double *v, double *gt, double *dt, int N){
   }
 }
 
-double compute_eps(int n, double *u_array, double *v_array){
+double compute_eps(int n, double *v_array){
 	double eps_max, eps;
 	eps_max = 0;
 	for(int i=0; i<n; i++){
-		eps = fabs((v_array[i] - u_array[i])/u_array[i]);
+		eps = fabs((v_array[i] - u[i])/u[i]);
 		if (eps > eps_max){
 			eps_max = eps;
 			}
@@ -86,6 +87,26 @@ double compute_eps(int n, double *u_array, double *v_array){
   cout << "log10(eps_max) = " << log10(eps_max) << endl;
   return log10(eps_max);
 	}
+
+  void LU_decomp(int n){
+    mat A = mat(n,n,fill::eye);
+    A(0,0) = 2;
+    A(0,1) = -1;
+    for(int i=1;i<n-1;i++){
+      A(i,i) = 2;
+      A(i,i-1) = -1;
+      A(i,i+1) = -1;
+    }
+    A(n-1, n-1) = 2;
+    A(n-1, n-2) = -1;
+    mat L, U, P;
+    lu(L,U,P,A);
+    vec b_copy(b, n);
+    b_copy = b_copy*P;
+    vec y = solve(L, b_copy);
+    vec x = solve(U, y);
+    //x.print("Solution = ");
+  }
 
 int main(int argc, char* argv[]){
   if (!argv[2]){
@@ -135,7 +156,8 @@ int main(int argc, char* argv[]){
     }
 
     time[i-1] = (end - start)/CLOCKS_PER_SEC;
-    eps[i-1] = compute_eps(N, u, v);
+    eps[i-1] = compute_eps(N, v);
+    //LU_decomp(N);
   }
 
   string extradat = "epsclock";
@@ -146,5 +168,6 @@ int main(int argc, char* argv[]){
   for (int i = 0; i < max_exponent; i++){
     ofile << setw(15) << setprecision(8) << to_string(i+1) << "," << time[i] << "," << eps[i] << endl;
   }
+
   return 0;
 }
