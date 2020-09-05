@@ -88,25 +88,25 @@ double compute_eps(int n, double *v_array){
   return log10(eps_max);
 	}
 
-  void LU_decomp(int n){
-    mat A = mat(n,n,fill::eye);
-    A(0,0) = 2;
-    A(0,1) = -1;
-    for(int i=1;i<n-1;i++){
-      A(i,i) = 2;
-      A(i,i-1) = -1;
-      A(i,i+1) = -1;
-    }
-    A(n-1, n-1) = 2;
-    A(n-1, n-2) = -1;
-    mat L, U, P;
-    lu(L,U,P,A);
-    vec g_vec(g, n);
-    g_vec = P*g_vec;
-    vec y = solve(L, g_vec);
-    vec x_vec = solve(U, y);
-    return x_vec;
+vec LU_decomp(int n){
+  mat A = mat(n,n,fill::eye);
+  A(0,0) = 2;
+  A(0,1) = -1;
+  for(int i=1;i<n-1;i++){
+    A(i,i) = 2;
+    A(i,i-1) = -1;
+    A(i,i+1) = -1;
   }
+  A(n-1, n-1) = 2;
+  A(n-1, n-2) = -1;
+  mat L, U, P;
+  lu(L,U,P,A);
+  vec g_vec(g, n);
+  g_vec = P*g_vec;
+  vec y = solve(L, g_vec);
+  vec x_vec = solve(U, y);
+  return x_vec;
+}
 
 int main(int argc, char* argv[]){
   if (!argv[2]){
@@ -144,20 +144,21 @@ int main(int argc, char* argv[]){
     end = clock();
     string expstr = to_string(i);
 
+    vec LU_sol = LU_decomp(N);
+
     if (i <= 3 && method == 0){
       string vdataname = "values";
       vdataname.append(expstr).append(".csv");
       ofile.open(vdataname);
-      ofile << "x," << "u," << "v" << endl;
+      ofile << "x," << "u," << "v," << "LUv" << endl;
       for (int i = 0; i<N; i++){
-        ofile << setw(15) << setprecision(8) << x[i] <<"," << u[i] << "," << v[i] << endl;
+        ofile << setw(15) << setprecision(8) << x[i] <<"," << u[i] << "," << v[i] << "," << LU_sol[i] << endl;
       }
       ofile.close();
     }
 
     time[i-1] = (end - start)/CLOCKS_PER_SEC;
     eps[i-1] = compute_eps(N, v);
-    LU_decomp(N);
   }
 
   string extradat = "epsclock";
