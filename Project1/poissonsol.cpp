@@ -101,11 +101,11 @@ double compute_eps(int n, double *v_array){
     A(n-1, n-2) = -1;
     mat L, U, P;
     lu(L,U,P,A);
-    vec b_copy(b, n);
-    b_copy = b_copy*P;
-    vec y = solve(L, b_copy);
-    vec x = solve(U, y);
-    //x.print("Solution = ");
+    vec g_vec(g, n);
+    g_vec = P*g_vec;
+    vec y = solve(L, g_vec);
+    vec x_vec = solve(U, y);
+    return x_vec;
   }
 
 int main(int argc, char* argv[]){
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]){
 
     time[i-1] = (end - start)/CLOCKS_PER_SEC;
     eps[i-1] = compute_eps(N, v);
-    //LU_decomp(N);
+    LU_decomp(N);
   }
 
   string extradat = "epsclock";
