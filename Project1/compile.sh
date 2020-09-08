@@ -1,1 +1,1 @@
-g++ -o  poissonsol.exe  poissonsol.cpp -O2 -larmadillo -llapack -lblas
+g++ -o  poissonsol.exe  poissonsol.cpp -larmadillo -llapack -lblas
