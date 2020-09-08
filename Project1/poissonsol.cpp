@@ -109,7 +109,7 @@ vec LU_decomp(int n){
 }
 
 int main(int argc, char* argv[]){
-  if (!argv[2]){
+  if (argc < 3){
     cout << "Call program with exponent and method choice (0 or 1)" <<endl;
     exit(0);
   }
