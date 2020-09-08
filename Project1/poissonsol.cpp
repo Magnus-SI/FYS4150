@@ -118,6 +118,7 @@ int main(int argc, char* argv[]){
   int method = atoi(argv[2]);   //0 if optimized, 1 if general
   //ofilename = argv[2];
   double *time = new double[max_exponent];
+  double *LUtime = new double[max_exponent];
   double *eps = new double[max_exponent];
   //for loop here
   for (int i = 1; i <=max_exponent; i++){
@@ -127,6 +128,7 @@ int main(int argc, char* argv[]){
     double *gt = new double[N];
     double *dt = new double[N];
     double *v = new double[N];
+    vec LU_sol;
 
     double start, end;
     start = clock();
@@ -144,9 +146,19 @@ int main(int argc, char* argv[]){
     end = clock();
     string expstr = to_string(i);
 
-    vec LU_sol = LU_decomp(N);
+    if (i<=5 && method == 1){
+      double startLU = clock();
+      LU_sol = LU_decomp(N);
+      double endLU = clock();
+      LUtime[i-1] = (endLU - startLU)/CLOCKS_PER_SEC;
+    }
+    else{
+      LUtime[i-1] = 0;
+    }
 
-    if (i <= 3 && method == 0){
+
+
+    if (i <= 3 && method == 1){
       string vdataname = "values";
       vdataname.append(expstr).append(".csv");
       ofile.open(vdataname);
@@ -165,9 +177,9 @@ int main(int argc, char* argv[]){
   extradat.append(to_string(method));
   extradat.append(".csv");
   ofile.open(extradat);
-  ofile << "expv," << "time," << "maxeps" <<endl;
+  ofile << "expv," << "time," << "maxeps," << "LUtime" <<endl;
   for (int i = 0; i < max_exponent; i++){
-    ofile << setw(15) << setprecision(8) << to_string(i+1) << "," << time[i] << "," << eps[i] << endl;
+    ofile << setw(15) << setprecision(8) << to_string(i+1) << "," << time[i] << "," << eps[i] << "," << LUtime[i] << endl;
   }
 
   return 0;
