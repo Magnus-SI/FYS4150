@@ -11,7 +11,7 @@ def plot_sol(method):
         v = df['v'].values
         if method == 'lin':
             #Plotting solution for different N
-            plt.plot(x, v, label = 'N = %s'%N)
+            plt.plot(x, v, label = r'n = 10$^{%s}$'%N)
             if N == '3':
                 u = df['u'].values
                 plt.plot(x, u, label = 'closed form sol.')

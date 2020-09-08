@@ -131,14 +131,15 @@ int main(int argc, char* argv[]){
     vec LU_sol;
 
     double start, end;
-    start = clock();
     if (method){
       cout << "Using general method" << endl;
+      start = clock();
       forward_general(gt, dt, N);
       backward_general(v, gt, dt, N);
     }
     else{
       cout << "Using optimized method" << endl;
+      start = clock();
       forward_optim(gt, dt, N);
       backward_optim(v, gt, dt, N);
     }
@@ -146,7 +147,7 @@ int main(int argc, char* argv[]){
     end = clock();
     string expstr = to_string(i);
 
-    if (i<=5 && method == 1){
+    if (i<=4 && method == 1){
       double startLU = clock();
       LU_sol = LU_decomp(N);
       double endLU = clock();
@@ -155,8 +156,6 @@ int main(int argc, char* argv[]){
     else{
       LUtime[i-1] = 0;
     }
-
-
 
     if (i <= 3 && method == 1){
       string vdataname = "values";
