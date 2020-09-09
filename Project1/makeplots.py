@@ -4,6 +4,18 @@ import pandas as pd
 
 
 def plot_sol(method):
+    """
+    If method is lin:
+    Plots the values of the approximate solution v against the analytical solution
+    u as a function of x for values of n = 10, 100, 1000.
+    Saves the result in figure lin.pdf.
+
+    If method is log:
+    plots the relative error between u and v in a logarithmic plot as a function of x.
+    Saves the result in figure log.pdf.
+
+    The used values are stored in valuesn.csv for the values of n.
+    """
     plt.figure()
     for N in ('1', '2', '3'):
         df = pd.read_csv('vals/values' + N + '.csv')
@@ -25,6 +37,13 @@ def plot_sol(method):
     plt.savefig(method+".pdf")
 
 def plot_maxeps():
+    """
+    Plots the maximum value of log10 of the relative errors from the results
+    from the optimized method (arbitrary choice as v is the same for all methods,
+    but optimized is the fastest way to generate these results).
+    The values used are stored in epsclock0.csv.
+    The resulting figure is saved in eps.pdf
+    """
     plt.figure()
     data = pd.read_csv('vals/epsclock0.csv')
     N = data['expv'].values
@@ -37,6 +56,11 @@ def plot_maxeps():
     plt.savefig("eps.pdf")
 
 def plot_time():
+    """
+    Compares the computational time of the different algorithms and plots
+    them as a function of grid points n.
+    The resulting figure is saved as time.pdf
+    """
     plt.figure()
     optimized = pd.read_csv('vals/epsclock0.csv')
     N_o = optimized['expv'].values
@@ -57,7 +81,8 @@ def plot_time():
     plt.legend()
     plt.savefig("time.pdf")
 
-
-plot_sol("lin")
-plot_maxeps()
-plot_time()
+if __name__ == "__main__":
+    "Generate the plots used in the report:"
+    plot_sol("lin")
+    plot_maxeps()
+    plot_time()
