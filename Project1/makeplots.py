@@ -6,7 +6,7 @@ import pandas as pd
 def plot_sol(method):
     plt.figure()
     for N in ('1', '2', '3'):
-        df = pd.read_csv('values' + N + '.csv')
+        df = pd.read_csv('vals/values' + N + '.csv')
         x = df['x'].values
         v = df['v'].values
         if method == 'lin':
@@ -26,7 +26,7 @@ def plot_sol(method):
 
 def plot_maxeps():
     plt.figure()
-    data = pd.read_csv('epsclock0.csv')
+    data = pd.read_csv('vals/epsclock0.csv')
     N = data['expv'].values
     eps_max = data['maxeps'].values
     plt.plot(N, eps_max, label='Measured error')
@@ -38,11 +38,11 @@ def plot_maxeps():
 
 def plot_time():
     plt.figure()
-    optimized = pd.read_csv('epsclock0.csv')
+    optimized = pd.read_csv('vals/epsclock0.csv')
     N_o = optimized['expv'].values
     time_o = optimized['time'].values
 
-    general = pd.read_csv('epsclock1.csv')
+    general = pd.read_csv('vals/epsclock1.csv')
     N_g = general['expv'].values
     time_g = general['time']
     time_LU = general['LUtime']
