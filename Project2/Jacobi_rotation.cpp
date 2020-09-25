@@ -10,6 +10,7 @@ using namespace arma;
 
 void Jacobi_rotation::initialize(double a, double b, int N, double V(double rho))
 {
+  /* Initializing the problem, the Hamiltonian matrix, etc. */
   m_N = N;
   m_h = (b - a)/(m_N+1);
   m_Hamiltonian = zeros<mat>(m_N, m_N);
@@ -33,16 +34,18 @@ void Jacobi_rotation::initialize(double a, double b, int N, double V(double rho)
 
 void Jacobi_rotation::print_matrix()
 {
+  /* Just printing the matrix. Should only be used for testing on small matrices */
   m_Hamiltonian.print();
 }
 
 void Jacobi_rotation::rotate()
 {
-
+  /* Method to rotate matrix */
 }
 
 void Jacobi_rotation::write_to_file(string filename)
 {
+  /* Needs to be fixed */
   m_ofile.open(filename);
   for (int i = 0; i < m_N; i++){
     m_ofile << m_x(i) << " " << m_v(i) << endl;
