@@ -107,6 +107,7 @@ void Jacobi_rotation::rotate(double conv, mat v)
       count++;
   }
   a.print();
+  v.print();
 }
 
 void Jacobi_rotation::write_to_file(string filename)

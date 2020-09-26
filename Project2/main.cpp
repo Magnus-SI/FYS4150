@@ -23,9 +23,8 @@ int main()
   //my_solver.print_matrix();
 
   double conv = 1e-8;
-  vec r = zeros<vec>(N);
   mat V = zeros<mat>(N, N);
-  my_solver.rotate(conv, r, V);
+  my_solver.rotate(conv, V);
 
 }
 
