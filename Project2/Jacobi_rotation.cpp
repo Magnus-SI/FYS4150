@@ -38,16 +38,18 @@ void Jacobi_rotation::print_matrix()
   m_Hamiltonian.print();
 }
 
-void Jacobi_rotation::rotate(int n, int interact, double conv, mat a, vec r, mat v)
+void Jacobi_rotation::rotate(double conv, vec r, mat v)
 {
   /* Method to rotate matrix */
   double aip=0, aiq=0, vpi=0, vqi=0;
   double tau=0, t=0, s=0, c=0;//tan(theta), sin(theta), cos(theta)
   int count=1;                //count of iterations
   int count_old=count-10;     //keep track of every 10th iteration
-  int p=n-1, q=n-2;           //off diag all same value to start
+  int p=m_N-1, q=m_N-2;           //off diag all same value to start
                               //pick last as first maximum
   clock_t start, end;
+
+  mat a = m_Hamiltonian;
 
   double app=a(p,p);
   double aqq=a(q,q);
@@ -56,8 +58,8 @@ void Jacobi_rotation::rotate(int n, int interact, double conv, mat a, vec r, mat
   while(abs(apq)>conv){
       if(count>1){
           apq=0;
-          for (int i=0;i<n;i++){
-               for (int j=0;j<n;j++){
+          for (int i=0;i<m_N;i++){
+               for (int j=0;j<m_N;j++){
                   if(i!=j && abs(a(i,j))>=abs(apq)){
                       apq=a(i,j);
                       p=i;
@@ -79,7 +81,7 @@ void Jacobi_rotation::rotate(int n, int interact, double conv, mat a, vec r, mat
       s=c*t;
 
       //calculate new matrix elements and vectors
-      for(int i=0;i<n;i++){
+      for(int i=0;i<m_N;i++){
           if(i!=p && i!=q){
               aip=a(i,p);
               aiq=a(i,q);
@@ -104,11 +106,12 @@ void Jacobi_rotation::rotate(int n, int interact, double conv, mat a, vec r, mat
 
       count++;
   }
+  a.print();
 }
 
 void Jacobi_rotation::write_to_file(string filename)
 {
-  /* Needs to be fixed */
+  /* Needs to be tailored to our problem */
   m_ofile.open(filename);
   for (int i = 0; i < m_N; i++){
     m_ofile << m_x(i) << " " << m_v(i) << endl;

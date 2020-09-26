@@ -18,8 +18,7 @@ protected:
 public:
   void initialize(double a, double b, int N, double V(double rho));
   void print_matrix();
-  void rotate(int n, int interact, double conv, mat a, vec r, mat v);
+  void rotate(double conv, vec r, mat v);
   void write_to_file(string filename);
-  void find_max(mat a, int p, int q, double apq, int n);
 };
 #endif
