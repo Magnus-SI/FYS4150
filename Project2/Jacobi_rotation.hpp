@@ -18,7 +18,7 @@ protected:
 public:
   void initialize(double a, double b, int N, double V(double rho));
   void print_matrix();
-  void rotate(double conv, vec r, mat v);
+  void rotate(double conv, mat v);
   void write_to_file(string filename);
 };
 #endif

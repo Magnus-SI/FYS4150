@@ -38,7 +38,7 @@ void Jacobi_rotation::print_matrix()
   m_Hamiltonian.print();
 }
 
-void Jacobi_rotation::rotate(double conv, vec r, mat v)
+void Jacobi_rotation::rotate(double conv, mat v)
 {
   /* Method to rotate matrix */
   double aip=0, aiq=0, vpi=0, vqi=0;
