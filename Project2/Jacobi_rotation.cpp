@@ -38,7 +38,7 @@ void Jacobi_rotation::print_matrix()
   m_Hamiltonian.print();
 }
 
-void Jacobi_rotation::rotate(double conv, mat v)
+void Jacobi_rotation::rotate(double conv)
 {
   /* Method to rotate matrix */
   double aip=0, aiq=0, vpi=0, vqi=0;
@@ -49,19 +49,20 @@ void Jacobi_rotation::rotate(double conv, mat v)
                               //pick last as first maximum
   clock_t start, end;
 
-  mat a = m_Hamiltonian;
+  A = m_Hamiltonian;
+  V = mat(m_N, m_N, fill::eye);
 
-  double app=a(p,p);
-  double aqq=a(q,q);
-  double apq=a(p,q);
+  double app=A(p,p);
+  double aqq=A(q,q);
+  double apq=A(p,q);
 
   while(abs(apq)>conv){
       if(count>1){
           apq=0;
           for (int i=0;i<m_N;i++){
                for (int j=0;j<m_N;j++){
-                  if(i!=j && abs(a(i,j))>=abs(apq)){
-                      apq=a(i,j);
+                  if(i!=j && abs(A(i,j))>=abs(apq)){
+                      apq=A(i,j);
                       p=i;
                       q=j;
                     }
@@ -70,8 +71,8 @@ void Jacobi_rotation::rotate(double conv, mat v)
       }
 
       //calculate sin(theta) and cos(theta)
-      aqq=a(q,q);
-      app=a(p,p);
+      aqq=A(q,q);
+      app=A(p,p);
       tau=(aqq-app)/(2*apq);
       if(tau>0)
           t=1/(tau+sqrt(1+tau*tau));
@@ -83,31 +84,41 @@ void Jacobi_rotation::rotate(double conv, mat v)
       //calculate new matrix elements and vectors
       for(int i=0;i<m_N;i++){
           if(i!=p && i!=q){
-              aip=a(i,p);
-              aiq=a(i,q);
-              a(i,p)=aip*c-aiq*s;
-              a(p,i)=aip*c-aiq*s;
-              a(i,q)=aiq*c+aip*s;
-              a(q,i)=aiq*c+aip*s;
+              aip=A(i,p);
+              aiq=A(i,q);
+              A(i,p)=aip*c-aiq*s;
+              A(p,i)=aip*c-aiq*s;
+              A(i,q)=aiq*c+aip*s;
+              A(q,i)=aiq*c+aip*s;
           }
           //vpi=v(p,i);
           //vqi=v(q,i);
-          vpi=v(i,p);
-          vqi=v(i,q);
+          vpi=V(i,p);
+          vqi=V(i,q);
           //v(p,i)=c*vpi-s*vqi;
          // v(q,i)=c*vqi+s*vpi;
-          v(i,p)=c*vpi-s*vqi;
-          v(i,q)=c*vqi+s*vpi;
+          V(i,p)=c*vpi-s*vqi;
+          V(i,q)=c*vqi+s*vpi;
       }
-      a(p,p)=app*c*c-2*apq*c*s+aqq*s*s;
-      a(q,q)=app*s*s+2*apq*c*s+aqq*c*c;
-      a(p,q)=0;
-      a(q,p)=0;
+      A(p,p)=app*c*c-2*apq*c*s+aqq*s*s;
+      A(q,q)=app*s*s+2*apq*c*s+aqq*c*c;
+      A(p,q)=0;
+      A(q,p)=0;
 
       count++;
   }
-  a.print();
-  v.print();
+  A.print();
+  V.print();
+}
+
+void Jacobi_rotation::test_eig()
+{
+  vec eigval;
+  mat eigvec;
+
+  eig_sym(eigval, eigvec, m_Hamiltonian);
+  eigval.print();
+  eigvec.print();
 }
 
 void Jacobi_rotation::write_to_file(string filename)

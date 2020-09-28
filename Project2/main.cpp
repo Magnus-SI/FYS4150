@@ -20,12 +20,10 @@ int main()
   Jacobi_rotation my_solver;
   //Initializing the matrix to diagonalise
   my_solver.initialize(a, b, N, V_0);
-  //my_solver.print_matrix();
 
   double conv = 1e-8;
-  mat V = zeros<mat>(N, N);
-  my_solver.rotate(conv, V);
-
+  my_solver.rotate(conv);
+  my_solver.test_eig();
 }
 
 double V_0(double rho)
