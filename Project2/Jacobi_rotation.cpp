@@ -113,15 +113,23 @@ void Jacobi_rotation::rotate(double conv)
 void Jacobi_rotation::rearrange()
 {
 
-  vector<double>eigen;
+  vec eigen = zeros(m_N);
+  mat V_temp = zeros(m_N, m_N);
+
   for(int i=0; i<m_N; i++){
-      eigen.push_back(A(i,i));
+      eigen(i) = A(i,i);
   }
-  sort(eigen.begin(), eigen.begin() + m_N);
+  uvec ind = sort_index(eigen);
+
   for(int i=0; i<m_N; i++){
-    A(i,i) = eigen[i];
+    A(i,i) = eigen(ind(i));
+    for(int j=0; j<m_N; j++){
+      V_temp(j,i) = V(j, ind(i));
+    }
   }
-  A.print();
+  V = V_temp;
+  cout << endl;
+  V.print();
 }
 
 void Jacobi_rotation::test_eig()
@@ -130,6 +138,7 @@ void Jacobi_rotation::test_eig()
   mat eigvec;
 
   eig_sym(eigval, eigvec, m_Hamiltonian);
+  eigvec.print();
 }
 
 void Jacobi_rotation::write_to_file(string filename)
