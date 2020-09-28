@@ -107,8 +107,21 @@ void Jacobi_rotation::rotate(double conv)
 
       count++;
   }
+  cout << "Number of iterations at N = " << m_N << " : " << count << endl;
+}
+
+void Jacobi_rotation::rearrange()
+{
+
+  vector<double>eigen;
+  for(int i=0; i<m_N; i++){
+      eigen.push_back(A(i,i));
+  }
+  sort(eigen.begin(), eigen.begin() + m_N);
+  for(int i=0; i<m_N; i++){
+    A(i,i) = eigen[i];
+  }
   A.print();
-  V.print();
 }
 
 void Jacobi_rotation::test_eig()
@@ -117,8 +130,6 @@ void Jacobi_rotation::test_eig()
   mat eigvec;
 
   eig_sym(eigval, eigvec, m_Hamiltonian);
-  eigval.print();
-  eigvec.print();
 }
 
 void Jacobi_rotation::write_to_file(string filename)

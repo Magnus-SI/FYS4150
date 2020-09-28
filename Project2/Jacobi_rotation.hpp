@@ -21,6 +21,7 @@ public:
   void print_matrix();
   void rotate(double conv);
   void write_to_file(string filename);
+  void rearrange();
   void test_eig();
 };
 #endif

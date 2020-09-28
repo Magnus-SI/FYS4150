@@ -24,6 +24,7 @@ int main()
   double conv = 1e-8;
   my_solver.rotate(conv);
   my_solver.test_eig();
+  my_solver.rearrange();
 }
 
 double V_0(double rho)
