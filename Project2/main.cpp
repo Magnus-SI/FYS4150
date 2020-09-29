@@ -10,6 +10,8 @@ using namespace arma;
 
 double V_0(double rho);
 
+double V_d(double rho);
+
 
 int main()
 {
@@ -27,16 +29,17 @@ int main()
   my_solver.rearrange();
 
   double rhomin = 0;
-  int N = 10;
+  int n = 10;
   Jacobi_rotation solver;
-  for(int i=1; i<6; i++){
-    cout<<i<<endl
-    double rhomax = i;
-    solver.initialize(rhomin, rhomax, N, V_d);
+  double rhomax;
+  for(int i=1; i<15; i++){
+    cout<<i<<endl;
+    rhomax = i;
+    solver.initialize(rhomin, rhomax, n, V_d);
     solver.rotate(conv);
     solver.rearrange();
     string rhomstr = to_string(i);
-    rhomstr.append(".csv")
+    rhomstr.append(".csv");
     solver.write_to_file(rhomstr);
   }
 }
