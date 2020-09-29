@@ -129,7 +129,7 @@ void Jacobi_rotation::rearrange()
   }
   V = V_temp;
   cout << endl;
-  V.print();
+  //V.print();
 }
 
 vec Jacobi_rotation::return_eig()
@@ -142,13 +142,14 @@ vec Jacobi_rotation::return_eig()
   return eigen;
 }
 
-void Jacobi_rotation::test_eig()
+ mat Jacobi_rotation::test_eig()
 {
   vec eigval;
   mat eigvec;
 
   eig_sym(eigval, eigvec, m_Hamiltonian);
-  eigvec.print();
+  return eigvec;
+  //eigvec.print();
 }
 
 void Jacobi_rotation::write_to_file(string filename)

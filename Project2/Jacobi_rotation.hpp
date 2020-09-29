@@ -24,6 +24,6 @@ public:
   void write_to_file(string filename);
   void rearrange();
   vec return_eig();
-  void test_eig();
+  mat test_eig();
 };
 #endif
