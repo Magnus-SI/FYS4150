@@ -46,6 +46,7 @@ void Jacobi_rotation::rotate(double conv)
   int count=1;                //count of iterations
   int count_old=count-10;     //keep track of every 10th iteration
   int p=m_N-1, q=m_N-2;           //off diag all same value to start
+  int max_iter = 20000;
                               //pick last as first maximum
   clock_t start, end;
 
@@ -56,7 +57,7 @@ void Jacobi_rotation::rotate(double conv)
   double aqq=A(q,q);
   double apq=A(p,q);
 
-  while(abs(apq)>conv){
+  while(abs(apq)>conv && count<max_iter){
       if(count>1){
           apq=0;
           for (int i=0;i<m_N;i++){
@@ -142,7 +143,7 @@ vec Jacobi_rotation::return_eig()
   return eigen;
 }
 
- mat Jacobi_rotation::test_eig()
+mat Jacobi_rotation::test_eig()
 {
   vec eigval;
   mat eigvec;
@@ -161,4 +162,17 @@ void Jacobi_rotation::write_to_file(string filename)
     m_ofile << A(i,i) << "," << V(i,0) << "," << V(i,1) << "," << V(i,2) << endl;
   }
   m_ofile.close();
+}
+
+float Jacobi_rotation::quanteigtest()
+{
+  double maxerr = 0;
+  for (int i = 0; i<5; i++){
+    double eigv = A(i,i);
+    double analytic_eigv = 4*i+3;
+    if (abs(eigv - analytic_eigv)>maxerr){
+      maxerr = abs(eigv - analytic_eigv);
+    }
+  }
+  return maxerr;
 }

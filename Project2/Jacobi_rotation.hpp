@@ -24,5 +24,6 @@ public:
   void rearrange();
   vec return_eig();
   mat test_eig();
+  float quanteigtest();
 };
 #endif
