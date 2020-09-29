@@ -132,6 +132,16 @@ void Jacobi_rotation::rearrange()
   V.print();
 }
 
+vec Jacobi_rotation::return_eig()
+{
+  vec eigen = zeros(m_N);
+
+  for(int i=0; i<m_N; i++){
+      eigen(i) = A(i,i);
+  }
+  return eigen;
+}
+
 void Jacobi_rotation::test_eig()
 {
   vec eigval;

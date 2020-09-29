@@ -17,11 +17,13 @@ protected:
 
 public:
   mat A, V;
+  //vec eigen;
   void initialize(double a, double b, int N, double V(double rho));
   void print_matrix();
   void rotate(double conv);
   void write_to_file(string filename);
   void rearrange();
+  vec return_eig();
   void test_eig();
 };
 #endif
