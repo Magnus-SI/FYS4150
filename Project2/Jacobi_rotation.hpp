@@ -27,6 +27,7 @@ public:
   void rearrange();
   vec return_eig();
   mat test_eig();
+  void eigarma(vec &eigval, mat &eigvec);
   float quanteigtest(int method);
 };
 #endif

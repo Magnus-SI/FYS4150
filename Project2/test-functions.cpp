@@ -2,7 +2,10 @@
 #include "Jacobi_rotation.hpp"
 #include <armadillo>
 #include <cmath>
-
+#include <fstream>
+#include <string>
+#include <iostream>
+#include "time.h"
 
 TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
 
@@ -68,4 +71,39 @@ TEST_CASE("Eigenvalue deviation for Quantum case"){
     REQUIRE(err1 == Approx(err2).epsilon(1e-8));
   }
 
+}
+
+TEST_CASE("Timer and tester"){
+  double a = 0, b = 1;
+  int Vchoice = 0;
+  double conv = 1e-8;
+  vec ctimeNs = logspace(1,2, 5);
+  double start1, end1, start2, end2;
+  Jacobi_rotation timer;
+
+  ofstream ofile;
+  ofile.open("timer.csv");
+  ofile <<setw(15) << setprecision(8);
+  ofile << "log10N," << "Jtime," << "atime" << endl;
+
+  for (int i =0; i<5; i++){
+    timer.initialize(a, b, ctimeNs(i), Vchoice);
+
+    vec eigval;
+    mat eigvec;
+    start2 = clock();
+    timer.eigarma(eigval, eigvec);
+    end2 = clock();
+
+    start1 = clock();
+    timer.rotate(conv);
+    end1 = clock();
+    timer.rearrange();
+
+    REQUIRE(timer.A(0,0) == Approx(eigval(0)).epsilon(1e-5));
+
+    ofile << log10(ctimeNs(i)) << "," <<(end1-start1)/CLOCKS_PER_SEC<<"," << (end2-start2)/CLOCKS_PER_SEC<<endl;
+
+  }
+  ofile.close();
 }

@@ -27,25 +27,27 @@ int main()
   my_solver.rearrange();
   my_solver.write_to_file("ref.csv");
 
-  double rhomin = 0;
-  int n = 10;
-  Jacobi_rotation solver;
 
+
+  //Find optimal rhomax and N for the 1 electron system
+  double rhomin = 0;
   vec rhomax = linspace(1, 10, 10);
   vec Nvals = logspace(1, 2, 3);
+  Jacobi_rotation solver;
 
   ofstream ofile;
   ofile.open("e2d.csv");
   ofile <<setw(15) << setprecision(8);
-  ofile << "rhomax," << "1," << "2," << "3," << endl;
+  //ofile << "rhomax," << "1," << "2," << "3," <<"4,"<<"5,"<<"6,"<<"7,"<<"8,"<<"9,"<<"10,"<<"11,"<< endl;
+  ofile << "rhomax," << "1," << "2," << "3" << endl;
   Vchoice = 1;
-  int method = 0;
+  int method = 1;
   for (int i=0; i<10; i++){
     ofile<<rhomax(i)<<",";
     for (int j = 0; j<3; j++){
       solver.initialize(rhomin, rhomax(i), Nvals(j), Vchoice);
-      solver.rotate(conv);
-      solver.rearrange();
+      //solver.rotate(conv);
+      //solver.rearrange();
       double maxerr = solver.quanteigtest(method);
       ofile << maxerr<<",";
     }
@@ -63,9 +65,9 @@ int main()
   // solver3.rearrange();
   // solver3.write_to_file("opt.csv");
 
-
+  //Plot ground states for the 2 electron system.
   Vchoice = 2;
-  double rho_max = 4;
+  double rho_max = 5;
   int N_val = 100;
   Jacobi_rotation solver2;
   double omega_rs[] = {0.01, 0.5, 1, 5};

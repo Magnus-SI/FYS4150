@@ -172,6 +172,10 @@ mat Jacobi_rotation::test_eig()
   //eigvec.print();
 }
 
+void Jacobi_rotation::eigarma(vec &eigval, mat &eigvec){
+  eig_sym(eigval, eigvec, m_Hamiltonian);
+}
+
 void Jacobi_rotation::write_to_file(string filename)
 {
   /* Needs to be tailored to our problem */
