@@ -24,7 +24,6 @@ int main()
 
   double conv = 1e-8;
   my_solver.rotate(conv);
-  //my_solver.test_eig();
   my_solver.rearrange();
   my_solver.write_to_file("ref.csv");
 
@@ -35,23 +34,36 @@ int main()
   vec rhomax = linspace(1, 10, 10);
   vec Nvals = logspace(1, 2, 3);
 
-  // ofstream ofile;
-  // ofile.open("e2d.csv");
-  // ofile <<setw(15) << setprecision(8);
-  // ofile << "rhomax," << "1," << "2," << "3," << endl;
-  //
-  // for (int i=0; i<10; i++){
-  //   ofile<<rhomax(i)<<",";
-  //   for (int j = 0; j<3; j++){
-  //     solver.initialize(rhomin, rhomax(i), Nvals(j), V_d);
-  //     solver.rotate(conv);
-  //     solver.rearrange();
-  //     double maxerr = solver.quanteigtest();
-  //     ofile << maxerr<<",";
-  //   }
-  //   ofile<<endl;
-  // }
-  // ofile.close();
+  ofstream ofile;
+  ofile.open("e2d.csv");
+  ofile <<setw(15) << setprecision(8);
+  ofile << "rhomax," << "1," << "2," << "3," << endl;
+  Vchoice = 1;
+  int method = 0;
+  for (int i=0; i<10; i++){
+    ofile<<rhomax(i)<<",";
+    for (int j = 0; j<3; j++){
+      solver.initialize(rhomin, rhomax(i), Nvals(j), Vchoice);
+      solver.rotate(conv);
+      solver.rearrange();
+      double maxerr = solver.quanteigtest(method);
+      ofile << maxerr<<",";
+    }
+    ofile<<endl;
+  }
+  ofile.close();
+
+
+  // Vchoice = 1;
+  // double rho_max = 5;
+  // int N_val = 200;
+  // Jacobi_rotation solver3;
+  // solver3.initialize(rhomin, rho_max, N_val, Vchoice);
+  // solver3.rotate(conv);
+  // solver3.rearrange();
+  // solver3.write_to_file("opt.csv");
+
+
   Vchoice = 2;
   double rho_max = 4;
   int N_val = 100;

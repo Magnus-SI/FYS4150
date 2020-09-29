@@ -47,3 +47,25 @@ TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
     //REQUIRE(EigvalueNum(1)==Approx(Exact(1)).epsilon(0.00000001));
     //REQUIRE(EigvalueNum(2)==Approx(Exact(2)).epsilon(0.00000001));
 }
+
+TEST_CASE("Eigenvalue deviation for Quantum case"){
+  int Vchoice = 1;
+  double rhomin = 0;
+  double rhomax = 5;
+  vec Nvals = logspace(1,2, 2);
+  Jacobi_rotation tester;
+  double err1;
+  double err2;
+  int method1 = 0;    //Jacobi rotation method
+  int method2 = 1;    //armadillo eig_sym function
+  double conv = 1e-8;
+  for (int i=0; i<2; i++){
+    tester.initialize(rhomin, rhomax, Nvals(i), Vchoice);
+    err2 = tester.quanteigtest(method2);
+    tester.rotate(conv);
+    tester.rearrange();
+    err1 = tester.quanteigtest(method1);
+    REQUIRE(err1 == Approx(err2).epsilon(1e-8));
+  }
+
+}

@@ -27,6 +27,6 @@ public:
   void rearrange();
   vec return_eig();
   mat test_eig();
-  float quanteigtest();
+  float quanteigtest(int method);
 };
 #endif
