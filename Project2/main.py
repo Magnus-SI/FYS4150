@@ -20,7 +20,12 @@ if not os.path.exists("test-main.out"):
 
 def plotelectron2():
     plt.figure()
+    omega_rs = [0.01, 0.5, 1, 5]
+    rhomax = 4
+    rhos = np.linspace(0+(rhomax)/101, rhomax-rhomax/101, 100)
     for i in range(4):
         eigvecs = pd.read_csv("el2omega%i.csv"%i)
-        plt.plot(eigvecs["eigenvector1"])
+        plt.plot(rhos, eigvecs["eigenvector1"], label = r"$\omega_r = %g$"%omega_rs[i])
+    plt.legend()
+    plt.xlabel(r"$\rho$")
     plt.show()
