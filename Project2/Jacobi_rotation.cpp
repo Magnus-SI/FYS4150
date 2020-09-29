@@ -8,12 +8,31 @@
 using namespace std;
 using namespace arma;
 
-void Jacobi_rotation::initialize(double a, double b, int N, double V(double rho))
+double Jacobi_rotation::V_func(double rho)
+{
+  /* Zero potential */
+  if(m_Vchoice == 0){
+    return 0;
+  }
+  if(m_Vchoice ==1){
+    return pow(rho, 2);
+  }
+  if(m_Vchoice == 2){
+    return pow(omega_r * rho, 2) + 1/rho;
+  }
+  else{
+    cout<<"whaddup"<<endl;
+    return 0;
+  }
+}
+
+void Jacobi_rotation::initialize(double a, double b, int N, int Vchoice)
 {
   /* Initializing the problem, the Hamiltonian matrix, etc. */
   m_N = N;
   m_h = (b - a)/(m_N+1);
   m_Hamiltonian = zeros<mat>(m_N, m_N);
+  m_Vchoice = Vchoice;
 
   double  DiagConst, NondiagConst;
   DiagConst = 2.0 / (m_h*m_h);
@@ -21,15 +40,15 @@ void Jacobi_rotation::initialize(double a, double b, int N, double V(double rho)
   vec x = linspace(a + m_h, b-m_h, m_N);
 
   // Setting up tridiagonal matrix and diagonalization using Armadillo
-  m_Hamiltonian(0,0) = DiagConst + V(x(0));
+  m_Hamiltonian(0,0) = DiagConst + V_func(x(0));
   m_Hamiltonian(0,1) = NondiagConst;
   for(int i = 1; i < m_N-1; i++) {
     m_Hamiltonian(i,i-1)    = NondiagConst;
-    m_Hamiltonian(i,i)    = DiagConst + V(x(i));
+    m_Hamiltonian(i,i)    = DiagConst + V_func(x(i));
     m_Hamiltonian(i,i+1)    = NondiagConst;
   }
   m_Hamiltonian(m_N-1,m_N-2) = NondiagConst;
-  m_Hamiltonian(m_N-1,m_N-1) = DiagConst + V(x(m_N-1));
+  m_Hamiltonian(m_N-1,m_N-1) = DiagConst + V_func(x(m_N-1));
 }
 
 void Jacobi_rotation::print_matrix()

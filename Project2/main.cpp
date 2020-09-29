@@ -11,11 +11,6 @@
 using namespace arma;
 using namespace std;
 
-double V_0(double rho);
-
-double V_d(double rho);
-
-
 int main()
 {
   //Defining interval
@@ -24,7 +19,8 @@ int main()
   int N = 10;
   Jacobi_rotation my_solver;
   //Initializing the matrix to diagonalise
-  my_solver.initialize(a, b, N, V_0);
+  int Vchoice = 0;
+  my_solver.initialize(a, b, N, Vchoice);
 
   double conv = 1e-8;
   my_solver.rotate(conv);
@@ -39,33 +35,36 @@ int main()
   vec rhomax = linspace(1, 10, 10);
   vec Nvals = logspace(1, 2, 3);
 
-  ofstream ofile;
-  ofile.open("e2d.csv");
-  ofile <<setw(15) << setprecision(8);
-  ofile << "rhomax," << "1," << "2," << "3" << endl;
-
-  for (int i=0; i<10; i++){
-    ofile<<rhomax(i)<<",";
-    for (int j = 0; j<3; j++){
-      solver.initialize(rhomin, rhomax(i), Nvals(j), V_d);
-      solver.rotate(conv);
-      solver.rearrange();
-      double maxerr = solver.quanteigtest();
-      ofile << maxerr<<",";
-    ofile<<endl;
-    }
+  // ofstream ofile;
+  // ofile.open("e2d.csv");
+  // ofile <<setw(15) << setprecision(8);
+  // ofile << "rhomax," << "1," << "2," << "3," << endl;
+  //
+  // for (int i=0; i<10; i++){
+  //   ofile<<rhomax(i)<<",";
+  //   for (int j = 0; j<3; j++){
+  //     solver.initialize(rhomin, rhomax(i), Nvals(j), V_d);
+  //     solver.rotate(conv);
+  //     solver.rearrange();
+  //     double maxerr = solver.quanteigtest();
+  //     ofile << maxerr<<",";
+  //   }
+  //   ofile<<endl;
+  // }
+  // ofile.close();
+  Vchoice = 2;
+  double rho_max = 4;
+  int N_val = 100;
+  Jacobi_rotation solver2;
+  double omega_rs[] = {0.01, 0.5, 1, 5};
+  for(int i =0; i<4; i++){
+    solver2.omega_r = omega_rs[i];
+    solver2.initialize(rhomin, rho_max, N_val, Vchoice);
+    solver2.rotate(conv);
+    solver2.rearrange();
+    string fname = "el2omega";
+    fname.append(to_string(i));
+    solver2.write_to_file(fname.append(".csv"));
   }
-  ofile.close();
 
-}
-
-double V_0(double rho)
-{
-  /* Zero potential */
-  return 0;
-}
-
-double V_d(double rho)
-{
-  return pow(rho, 2);
 }

@@ -3,9 +3,6 @@
 #include <armadillo>
 #include <cmath>
 
-double V_0(double rho){
-  return 0;
-}
 
 TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
 
@@ -27,7 +24,8 @@ TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
 
     double a = 0;
     double b = 1;
-    my_solver.initialize(a, b, Dim, V_0);
+    int Vchoice = 0;
+    my_solver.initialize(a, b, Dim, Vchoice);
     double conv = 1e-8;
     my_solver.rotate(conv);
     my_solver.rearrange();

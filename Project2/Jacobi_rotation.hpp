@@ -14,10 +14,13 @@ protected:
   int m_N;
   vec m_q, m_x, m_v;
   ofstream m_ofile;
+  int m_Vchoice;
 
 public:
   mat A, V;
-  void initialize(double a, double b, int N, double V(double rho));
+  double omega_r;
+  double V_func(double rho);
+  void initialize(double a, double b, int N, int Vchoice);
   void print_matrix();
   void rotate(double conv);
   void write_to_file(string filename);
