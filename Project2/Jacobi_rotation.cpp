@@ -156,9 +156,9 @@ void Jacobi_rotation::write_to_file(string filename)
 {
   /* Needs to be tailored to our problem */
   m_ofile.open(filename);
-  m_ofile << "eigenvalues, eigenvector1,  eigenvector2 ,  eigenvector3" << endl;
+  m_ofile << "eigenvalues,eigenvector1,eigenvector2,eigenvector3" << endl;
   for (int i = 0; i < m_N; i++){
-    m_ofile << A(i,i) << ", " << V(i,0) << ", " << V(i,1) << ", " << V(i,2) << endl;
+    m_ofile << A(i,i) << "," << V(i,0) << "," << V(i,1) << "," << V(i,2) << endl;
   }
   m_ofile.close();
 }
