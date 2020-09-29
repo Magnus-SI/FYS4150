@@ -21,7 +21,7 @@ void Jacobi_rotation::initialize(double a, double b, int N, double V(double rho)
   vec x = linspace(a + m_h, b-m_h, m_N);
 
   // Setting up tridiagonal matrix and diagonalization using Armadillo
-  m_Hamiltonian(0,0) = DiagConst;
+  m_Hamiltonian(0,0) = DiagConst + V(x(0));
   m_Hamiltonian(0,1) = NondiagConst;
   for(int i = 1; i < m_N-1; i++) {
     m_Hamiltonian(i,i-1)    = NondiagConst;
@@ -29,7 +29,7 @@ void Jacobi_rotation::initialize(double a, double b, int N, double V(double rho)
     m_Hamiltonian(i,i+1)    = NondiagConst;
   }
   m_Hamiltonian(m_N-1,m_N-2) = NondiagConst;
-  m_Hamiltonian(m_N-1,m_N-1) = DiagConst;
+  m_Hamiltonian(m_N-1,m_N-1) = DiagConst + V(x(m_N-1));
 }
 
 void Jacobi_rotation::print_matrix()
@@ -156,8 +156,9 @@ void Jacobi_rotation::write_to_file(string filename)
 {
   /* Needs to be tailored to our problem */
   m_ofile.open(filename);
+  m_ofile << "eigenvalues, eigenvector1,  eigenvector2 ,  eigenvector3" << endl;
   for (int i = 0; i < m_N; i++){
-    m_ofile << m_x(i) << " " << m_v(i) << endl;
+    m_ofile << A(i,i) << ", " << V(i,0) << ", " << V(i,1) << ", " << V(i,2) << endl;
   }
   m_ofile.close();
 }
