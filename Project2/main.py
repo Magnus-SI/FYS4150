@@ -2,25 +2,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
-"""
-if not os.path.exists("main.out"):
-    os.system("c++	-o	main.out	main.cpp Jacobi_rotation.cpp	-larmadillo")
-if not os.path.exists("test-main.out"):
-    os.system("c++ -o tests.out tests-main.cpp test-functions.cpp Jacobi_rotation.cpp -larmadillo")
-"""
-#
-# eig = pd.read_csv("test.csv")
-# print(eig.keys())
-#
-# plt.plot(eig["eigenvector1"])
-# plt.plot(eig["eigenvector2"])
-# plt.plot(eig["eigenvector3"])
-# plt.show()
+plt.rcParams.update({'font.size': 14})
 
 def plotbeam():
     plt.figure()
-    eigvecs = pd.read_csv('beam.csv')
+    eigvecs = pd.read_csv('csv_files/beam.csv')
     x = np.linspace(0, 1, 102)
     for i in range(3):
         u = np.zeros(len(x))
@@ -35,8 +21,28 @@ def plotelectron2():
     rhomax = 5
     rhos = np.linspace(0+(rhomax)/101, rhomax-rhomax/101, 100)
     for i in range(4):
-        eigvecs = pd.read_csv("el2omega%i.csv"%i)
+        eigvecs = pd.read_csv("csv_files/el2omega%i.csv"%i)
         plt.plot(rhos, eigvecs["eigenvector1"], label = r"$\omega_r = %g$"%omega_rs[i])
     plt.legend()
     plt.xlabel(r"$\rho$")
+    plt.show()
+
+def plotiter():
+    plt.figure()
+    iter = pd.read_csv("csv_files/timer.csv")
+    print(iter.keys)
+    log10N = iter["        log10N"]
+    iters = iter["iters"]
+    Jtime = iter["Jtime"]
+    plt.plot(log10N, np.log10(iters), color='b', label='y = iterations')
+    #plt.plot(log10N, np.log10((10**log10N)**2 - 10**log10N), ls="--")
+    #plt.plot(log10N, np.log10((10**log10N)**2), ls="--")
+    plt.plot(log10N, np.log10(1.4*((10**log10N)**2 - 10**log10N)), ls="--", color='b',\
+        label=r"$y = N^2 - N$")
+    plt.xlabel(r"$log_{10}(N)$")
+    plt.ylabel(r"$\log_{10}$(y)")
+    plt.plot(log10N, np.log10(Jtime*1000), color='g', label='y = runtime [ms]')
+    plt.plot(log10N, np.log10((10**log10N)**4 - (10**log10N)**3)-4.5 , color='g', ls='--',\
+        label=r"$y = N^4 - N^3$")
+    plt.legend()
     plt.show()

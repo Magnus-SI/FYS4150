@@ -77,7 +77,7 @@ TEST_CASE("Timer and tester"){
   double a = 0, b = 1;
   int Vchoice = 0;
   double conv = 1e-8;
-  vec ctimeNs = logspace(1,2, 5);
+  vec ctimeNs = logspace(1, 2, 17);
   double start1, end1, start2, end2;
   Jacobi_rotation timer;
 
@@ -86,7 +86,7 @@ TEST_CASE("Timer and tester"){
   ofile <<setw(15) << setprecision(8);
   ofile << "log10N," << "Jtime," << "atime," << "iters" <<endl;
 
-  for (int i =0; i<5; i++){
+  for (int i =0; i<17; i++){
     timer.initialize(a, b, ctimeNs(i), Vchoice);
 
     vec eigval;
