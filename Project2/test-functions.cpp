@@ -42,7 +42,7 @@ TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
     for(int i=0; i<Dim; i++){
       REQUIRE(EigvalueNum(i)==Approx(Exact(i)).epsilon(0.00000001));
       for(int j=0; j<Dim; j++){
-        cout << Exactvec(i,j) << " " << eigvecNum(i,j) << endl;
+        //cout << Exactvec(i,j) << " " << eigvecNum(i,j) << endl;
         REQUIRE(abs(eigvecNum(i,j))==Approx(abs(Exactvec(i,j))).epsilon(0.00000001));
       }
     }
