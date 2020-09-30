@@ -16,7 +16,7 @@ int main()
   //Defining interval
   double a = 0, b = 1;
   //Number of points
-  int N = 10;
+  int N = 100;
   Jacobi_rotation my_solver;
   //Initializing the matrix to diagonalise
   int Vchoice = 0;
@@ -25,7 +25,7 @@ int main()
   double conv = 1e-8;
   my_solver.rotate(conv);
   my_solver.rearrange();
-  my_solver.write_to_file("ref.csv");
+  my_solver.write_to_file("beam.csv");
 
 
 

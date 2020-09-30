@@ -18,6 +18,17 @@ if not os.path.exists("test-main.out"):
 # plt.plot(eig["eigenvector3"])
 # plt.show()
 
+def plotbeam():
+    plt.figure()
+    eigvecs = pd.read_csv('beam.csv')
+    x = np.linspace(0, 1, 102)
+    for i in range(3):
+        u = np.zeros(len(x))
+        u[1:-1] = eigvecs['eigenvector%i'%(i+1)]
+        plt.plot(x, u, label = r'$v_%i$'%(i+1))
+    plt.legend()
+    plt.show()
+
 def plotelectron2():
     plt.figure()
     omega_rs = [0.01, 0.5, 1, 5]
