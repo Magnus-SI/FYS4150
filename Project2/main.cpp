@@ -13,21 +13,17 @@ using namespace std;
 
 int main()
 {
-  //Defining interval
+  //Solve buckling beam problem and save the three lowest eigenstates to file.
   double a = 0, b = 1;
-  //Number of points
-  int N = 100;
+  int N = 100;          //number of points
   Jacobi_rotation my_solver;
   //Initializing the matrix to diagonalise
-  int Vchoice = 0;
+  int Vchoice = 0;    //buckling beam, no potential
   my_solver.initialize(a, b, N, Vchoice);
-
-  double conv = 1e-8;
+  double conv = 1e-8;   //Jacobi tolerance for off-diagonals
   my_solver.rotate(conv);
   my_solver.rearrange();
-  my_solver.write_to_file("beam.csv");
-
-
+  my_solver.write_to_file("csv_files/beam.csv");
 
   //Find optimal rhomax and N for the 1 electron system
   double rhomin = 0;
@@ -36,18 +32,18 @@ int main()
   Jacobi_rotation solver;
 
   ofstream ofile;
-  ofile.open("e2d.csv");
+  ofile.open("csv_files/e2d.csv");
   ofile <<setw(15) << setprecision(8);
   //ofile << "rhomax," << "1," << "2," << "3," <<"4,"<<"5,"<<"6,"<<"7,"<<"8,"<<"9,"<<"10,"<<"11,"<< endl;
   ofile << "rhomax," << "1," << "2," << "3" << endl;
-  Vchoice = 1;
-  int method = 1;
+  Vchoice = 1;      //choose potential for the 1 electron quantum situation
+  int method = 0;   //method 0 if Jacobi, 1 if armadillo
   for (int i=0; i<10; i++){
     ofile<<rhomax(i)<<",";
     for (int j = 0; j<3; j++){
       solver.initialize(rhomin, rhomax(i), Nvals(j), Vchoice);
-      //solver.rotate(conv);
-      //solver.rearrange();
+      solver.rotate(conv);
+      solver.rearrange();
       double maxerr = solver.quanteigtest(method);
       ofile << maxerr<<",";
     }
@@ -65,9 +61,9 @@ int main()
   // solver3.rearrange();
   // solver3.write_to_file("opt.csv");
 
-  //Plot ground states for the 2 electron system.
+  //Save data for the 2 electron system.
   Vchoice = 2;
-  double rho_max = 5;
+  double rho_max = 6;
   int N_val = 100;
   Jacobi_rotation solver2;
   double omega_rs[] = {0.01, 0.5, 1, 5};
@@ -76,7 +72,7 @@ int main()
     solver2.initialize(rhomin, rho_max, N_val, Vchoice);
     solver2.rotate(conv);
     solver2.rearrange();
-    string fname = "el2omega";
+    string fname = "csv_files/el2omega";
     fname.append(to_string(i));
     solver2.write_to_file(fname.append(".csv"));
   }

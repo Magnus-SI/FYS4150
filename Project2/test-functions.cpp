@@ -8,10 +8,12 @@
 #include "time.h"
 
 TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
-
+    //Tests eigenvectors and eigenvalues of a small Toeplitz matrix by
+    //comparing to analytical values given in the project description.
     int Dim = 3;
     //    Set up the exact eigenvalues
     vec Exact(Dim);
+    mat exactvecs = zeros<mat>(Dim, Dim);
     double pi = acos(-1.0);
     // Integration step length
     //note that example programs didn't use dim+1 here, why?
@@ -20,6 +22,10 @@ TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
     double NondiagConst =  -1.0 / (Step*Step);
     for(int i = 0; i < Dim; i++) {
       Exact(i) = DiagConst+2*NondiagConst*cos((i+1)*pi/(Dim+1));
+      for (int j = 0; j <Dim; j++){
+        exactvecs(j,i) = sin((i+1)*(j+1)*pi/(Dim+1)) * pow(2, -0.5); //normalized
+        //cout << (i+1)*(j+1)*pi/Dim << endl;
+      }
     }
 
     //get numerical eigenvalues
@@ -34,24 +40,19 @@ TEST_CASE("Testing eigenvalues/eigenvectors of Toeplitz matrix"){
     my_solver.rearrange();
     vec EigvalueNum = my_solver.return_eig();
     mat eigvecNum = my_solver.V;
-    mat Exactvec = my_solver.test_eig();
 
-    //cout << EigvalueNum(0) << "yo"<< Exact(0) << endl;
-    //cout << EigvalueNum(1) << "yo"<< Exact(1) << endl;
-    //cout << EigvalueNum(2) << "yo"<< Exact(2) << endl;
     for(int i=0; i<Dim; i++){
       REQUIRE(EigvalueNum(i)==Approx(Exact(i)).epsilon(0.00000001));
       for(int j=0; j<Dim; j++){
-        //cout << Exactvec(i,j) << " " << eigvecNum(i,j) << endl;
-        REQUIRE(abs(eigvecNum(i,j))==Approx(abs(Exactvec(i,j))).epsilon(0.00000001));
+        REQUIRE(abs(eigvecNum(i,j))==Approx(abs(exactvecs(i,j))).epsilon(0.00000001));
       }
     }
-    //REQUIRE(EigvalueNum(0)==Approx(Exact(0)).epsilon(0.00000001));
-    //REQUIRE(EigvalueNum(1)==Approx(Exact(1)).epsilon(0.00000001));
-    //REQUIRE(EigvalueNum(2)==Approx(Exact(2)).epsilon(0.00000001));
+
 }
 
 TEST_CASE("Eigenvalue deviation for Quantum case"){
+  //Tests the maximum eigenvalue deviation function by comparing its value
+  //when using armadillo functions with the Jacobi algorithm.
   int Vchoice = 1;
   double rhomin = 0;
   double rhomax = 5;
@@ -74,6 +75,8 @@ TEST_CASE("Eigenvalue deviation for Quantum case"){
 }
 
 TEST_CASE("Timer and tester"){
+  //Times and compares the Jacobi algorithm with armadillo functions for different
+  //values of N. Also tests that their first eigenvalues are always similar.
   double a = 0, b = 1;
   int Vchoice = 0;
   double conv = 1e-8;
@@ -82,7 +85,7 @@ TEST_CASE("Timer and tester"){
   Jacobi_rotation timer;
 
   ofstream ofile;
-  ofile.open("timer.csv");
+  ofile.open("csv_files/timer.csv");
   ofile <<setw(15) << setprecision(8);
   ofile << "log10N," << "Jtime," << "atime," << "iters" <<endl;
 

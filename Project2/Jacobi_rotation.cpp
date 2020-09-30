@@ -15,10 +15,10 @@ double Jacobi_rotation::V_func(double rho)
     return 0;
   }
   if(m_Vchoice ==1){
-    return pow(rho, 2);
+    return pow(rho, 2); //one electron quantum potential
   }
   if(m_Vchoice == 2){
-    return pow(omega_r * rho, 2) + 1/rho;
+    return pow(omega_r * rho, 2) + 1/rho; //two electron quantum potential
   }
   else{
     cout<<"whaddup"<<endl;
@@ -129,12 +129,13 @@ void Jacobi_rotation::rotate(double conv)
 
   iters = count;
   }
-  cout << "Number of iterations at N = " << m_N << " : " << count << endl;
+  //cout << "Number of iterations at N = " << m_N << " : " << count << endl;
 }
 
 void Jacobi_rotation::rearrange()
 {
-
+  /* Rearranges order of rotated eigenvectors and eigenvalues with first
+  eigenvalues first*/
   vec eigen = zeros(m_N);
   mat V_temp = zeros(m_N, m_N);
 
@@ -156,6 +157,7 @@ void Jacobi_rotation::rearrange()
 
 vec Jacobi_rotation::return_eig()
 {
+  /* Returns a vector of the current eigenvalues */
   vec eigen = zeros(m_N);
 
   for(int i=0; i<m_N; i++){
@@ -166,6 +168,7 @@ vec Jacobi_rotation::return_eig()
 
 mat Jacobi_rotation::test_eig()
 {
+  /* Returns the eigenvector calculated from the armadillo function eig_sym*/
   vec eigval;
   mat eigvec;
 
@@ -175,12 +178,14 @@ mat Jacobi_rotation::test_eig()
 }
 
 void Jacobi_rotation::eigarma(vec &eigval, mat &eigvec){
+  /* Modifies some defined eigval and eigvec to solve the system using
+  the armadillo function eig_sym */
   eig_sym(eigval, eigvec, m_Hamiltonian);
 }
 
 void Jacobi_rotation::write_to_file(string filename)
 {
-  /* Needs to be tailored to our problem */
+  /* Stores the first 3 eigenvectors and the eigenvalue for the current system */
   m_ofile.open(filename);
   m_ofile << "eigenvalues,eigenvector1,eigenvector2,eigenvector3" << endl;
   for (int i = 0; i < m_N; i++){
@@ -191,6 +196,9 @@ void Jacobi_rotation::write_to_file(string filename)
 
 float Jacobi_rotation::quanteigtest(int method)
 {
+  /* Tests the quantum eigenvalues by comparing to analytical values. the argument
+  method is 0 if the Jacobi rotation should be used, and 1 if the armadillo
+  functions should be used. */
   double maxerr = 0;
   vec eigval;
   if(method == 1){

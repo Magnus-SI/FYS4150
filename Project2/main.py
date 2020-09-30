@@ -5,6 +5,9 @@ import os
 plt.rcParams.update({'font.size': 14})
 
 def plotbeam():
+    """
+    Plot the buckling beam figure shown in the report.
+    """
     plt.figure()
     eigvecs = pd.read_csv('csv_files/beam.csv')
     x = np.linspace(0, 1, 102)
@@ -16,6 +19,9 @@ def plotbeam():
     plt.show()
 
 def plotelectron2():
+    """
+    Plot the 2-electron quantum system figure shown in the report.
+    """
     plt.figure()
     omega_rs = [0.01, 0.5, 1, 5]
     rhomax = 5
@@ -28,6 +34,9 @@ def plotelectron2():
     plt.show()
 
 def plotiter():
+    """
+    Plot the computational time and iteration plot shown in the report.
+    """
     plt.figure()
     iter = pd.read_csv("csv_files/timer.csv")
     print(iter.keys)
@@ -46,3 +55,8 @@ def plotiter():
         label=r"$y = N^4 - N^3$")
     plt.legend()
     plt.show()
+
+if __name__ == "__main__":
+    plotbeam()
+    plotelectron2()
+    plotiter()
