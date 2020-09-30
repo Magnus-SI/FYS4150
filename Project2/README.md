@@ -6,7 +6,7 @@ To compile and execute program:
 \> make all
 
 After the program is executed, it stores data in csv files in the folder "csv_files".
-These csv files can be analysed with the program main.py. Modify main.py by calling the function you want to plot.
-The run main.py:
+These csv files can be analysed with the program main.py, which plots various quantities.
+If you want to run main.py:
 
 \> python3 main.py
