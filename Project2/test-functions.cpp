@@ -84,7 +84,7 @@ TEST_CASE("Timer and tester"){
   ofstream ofile;
   ofile.open("timer.csv");
   ofile <<setw(15) << setprecision(8);
-  ofile << "log10N," << "Jtime," << "atime" << endl;
+  ofile << "log10N," << "Jtime," << "atime," << "iters" <<endl;
 
   for (int i =0; i<5; i++){
     timer.initialize(a, b, ctimeNs(i), Vchoice);
@@ -102,7 +102,7 @@ TEST_CASE("Timer and tester"){
 
     REQUIRE(timer.A(0,0) == Approx(eigval(0)).epsilon(1e-5));
 
-    ofile << log10(ctimeNs(i)) << "," <<(end1-start1)/CLOCKS_PER_SEC<<"," << (end2-start2)/CLOCKS_PER_SEC<<endl;
+    ofile << log10(ctimeNs(i)) << "," <<(end1-start1)/CLOCKS_PER_SEC<<"," << (end2-start2)/CLOCKS_PER_SEC<< "," << timer.iters << endl;
 
   }
   ofile.close();

@@ -126,6 +126,8 @@ void Jacobi_rotation::rotate(double conv)
       A(q,p)=0;
 
       count++;
+
+  iters = count;
   }
   cout << "Number of iterations at N = " << m_N << " : " << count << endl;
 }

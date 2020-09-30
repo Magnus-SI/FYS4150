@@ -19,6 +19,7 @@ protected:
 public:
   mat A, V;
   double omega_r;
+  int iters;
   double V_func(double rho);
   void initialize(double a, double b, int N, int Vchoice);
   void print_matrix();
