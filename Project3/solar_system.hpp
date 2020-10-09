@@ -1,20 +1,22 @@
 #ifndef SOLAR_SYSTEM_HPP
 #define SOLAR_SYSTEM_HPP
 #include <fstream>
-#include <armadillo>
 
 using namespace std;
-using namespace arma;
 
 class solar_system {
 
 protected:
-  int m_N; //number of objects
-  mat m_pos, m_vel, m_a;  //positions, velocities, (accelerations ?)
+  int m_N, m_Nt; //number of objects and time steps
+  double* m_x, m_y, m_z; //positions
+  double* m_vx, m_vy, m_vz; // velocities
+  double* m_masses; //masses of sun and planets
   ofstream m_ofile;
 
 public:
-  void initialize(int N);
+  void initialize(int N, int Nt);
+  void remove_drift();
   void velocity_verlet();
+  //void F_G();
 };
 #endif
