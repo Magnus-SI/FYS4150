@@ -1,12 +1,9 @@
-#ifndef SOLAR_SYSTEM_HPP
-#define SOLAR_SYSTEM_HPP
+#include "solar_system.hpp"
 #include <fstream>
-#include <armadillo>
 
 using namespace std;
-using namespace arma;
 
-void solar_system::initialize_system(int N, int Nt){
+void solar_system::initialize(int N, int Nt){
   /*
   Loads initial positions and velocities for the planets from a file.
   Using	Solar System Barycenter (SSB) coordinates.
@@ -14,24 +11,25 @@ void solar_system::initialize_system(int N, int Nt){
   //Number of objects and timesteps.
   m_N = N;
   m_Nt = Nt;
-  m_x = new double[Nparticles];
-  m_y = new double[Nparticles];
-  m_z = new double[Nparticles];
-  m_vx = new double[Nparticles];
-  m_vy = new double[Nparticles];
-  m_vz = new double[Nparticles];
-  mass = new double[Nparticles];
-  char* filename_initial = "initial.dat";   //Each line of file gives initial condition for a particle on the form: x y z vx vy vz
+  m_x = new double[m_N*m_Nt];
+  m_y = new double[m_N*m_Nt];
+  m_z = new double[m_N*m_Nt];
+  m_vx = new double[m_N*m_Nt];
+  m_vy = new double[m_N*m_Nt];
+  m_vz = new double[m_N*m_Nt];
+  m_mass = new double[m_N*m_Nt];
+  char* filename_initial = "initial.txt";   //Each line of file gives initial condition for a particle on the form: x y z vx vy vz
   char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
 
   //Open files
   FILE *fp_init = fopen(filename_initial, "r"); //Open file to read, specified by "r".
-  FILE *fp_mass = fopen(filename_mass, "r") //Open file to read.
+  FILE *fp_mass = fopen(filename_mass, "r"); //Open file to read.
 
   //Loop over each particle and extract its mass and initial conditions:
   for (int i=0; i<m_N; i++){
-    fscanf(fp_init, "%lf %lf %lf %lf %lf %lf", &x[i], &y[i], &z[i], &vx[i], &vy[i], &vz[i]); // One %lf (lf=long float or double) for each floating point number on each line of the file.
-    fscanf(fp_mass, "%lf", &mass[i]); //Extract mass for particle i.
+    fscanf(fp_init, "%lf %lf %lf %lf %lf %lf", &m_x[i], &m_y[i], &m_z[i], &m_vx[i], &m_vy[i], &m_vz[i]);
+    // One %lf (lf=long float or double) for each floating point number on each line of the file.
+    fscanf(fp_mass, "%lf", &m_mass[i]); //Extract mass for particle i.
   }
 
   fclose(fp_init); //Close file with initial conditions
@@ -67,4 +65,16 @@ void solar_system::F_G(){
 
 void solar_system::velocity_verlet(){
 
+}
+
+void solar_system::write_to_file(string filename)
+{
+  /* Stores the first 3 eigenvectors and the eigenvalue for the current system */
+  m_ofile.open(filename);
+  m_ofile << "x,y,z,vx,vy,vz" << endl;
+  for (int i=0; i<m_Nt*m_N; i++){
+    m_ofile << m_x[i] << "," << m_y[i] << "," << m_z[i] << "," << m_vx[i] << ","
+    << m_vy[i] << "," << m_vz[i] << endl;
+    }
+  m_ofile.close();
 }

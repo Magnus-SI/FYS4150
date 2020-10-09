@@ -32,11 +32,16 @@ initial_raw.close()
 
 N = len(objects)
 
-initial = open("initial.dat","w")
-
+initial = open("initial.txt","w")
+print("Writing initial positions and velocities to file")
 for line in range(N):
     initial.write(X[line]+" "+Y[line]+" "+Z[line]+" ")
     initial.write(VX[line]+" "+VY[line]+" "+VZ[line])
     initial.write("\n")
-
 initial.close()
+
+mass_file = open("masses.txt","w")
+print("Writing mass for objects to file")
+for line in range(N):
+    mass_file.write(mass[line]+"\n")
+mass_file.close()

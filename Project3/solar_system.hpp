@@ -8,9 +8,13 @@ class solar_system {
 
 protected:
   int m_N, m_Nt; //number of objects and time steps
-  double* m_x, m_y, m_z; //positions
-  double* m_vx, m_vy, m_vz; // velocities
-  double* m_masses; //masses of sun and planets
+  double* m_x;
+  double* m_y;
+  double* m_z; //positions
+  double* m_vx;
+  double* m_vy;
+  double* m_vz; // velocities
+  double* m_mass; //masses of sun and planets
   ofstream m_ofile;
 
 public:
@@ -18,5 +22,6 @@ public:
   void remove_drift();
   void velocity_verlet();
   //void F_G();
+  void write_to_file(string filename);
 };
 #endif
