@@ -14,14 +14,17 @@ protected:
   double* m_vx;
   double* m_vy;
   double* m_vz; // velocities
+  double* m_ax;  //Force between objects (gravity)
+  double* m_ay;
+  double* m_az;
   double* m_mass; //masses of sun and planets
-  double* F;  //Force between objects (gravity)
+  double h; //step size
   ofstream m_ofile;
 
 public:
-  void initialize(int N, int Nt);
+  void initialize(int N, int Nt, double T);
   void remove_drift();
-  void velocity_verlet();
+  void velocity_verlet(int m);
   void F_G(int m);
   void write_to_file(string filename);
 };
