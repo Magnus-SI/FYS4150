@@ -21,7 +21,7 @@ public:
   void initialize(int N, int Nt);
   void remove_drift();
   void velocity_verlet();
-  //void F_G();
+  double* F_G();
   void write_to_file(string filename);
 };
 #endif

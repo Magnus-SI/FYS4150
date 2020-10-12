@@ -42,26 +42,19 @@ void solar_system::remove_drift(){
   */
 }
 
-/*
-void solar_system::F_G(){
+void solar_system::F_G(int m){
   double G = 6.67e-11;
-  vec F = -G*ones(3*m_N);
+  double F[3] = {};
   //Loop over planets
+  //F[];
   for(int k=0; k<m_N; k++){
-    ind = k/3;
-    //Adding force from the sun
-    //Maybe there's a way to write this cleaner?
-    F(ind) *= m(k);
-    F(ind+1) *= m(k);
-    F(ind+2) *= m(k);
-    //Calculate forces from each planet on this planet
-    for(int j=0; j<m_N-1; j++){
-      //Do something
+    if(k != m){
+      F += ;
     }
   }
-
+  return F;
 }
-*/
+
 
 void solar_system::velocity_verlet(){
 
@@ -69,7 +62,7 @@ void solar_system::velocity_verlet(){
 
 void solar_system::write_to_file(string filename)
 {
-  /* Stores the first 3 eigenvectors and the eigenvalue for the current system */
+  /* Stores the positions and velocities */
   m_ofile.open(filename);
   m_ofile << "x,y,z,vx,vy,vz" << endl;
   for (int i=0; i<m_Nt*m_N; i++){
