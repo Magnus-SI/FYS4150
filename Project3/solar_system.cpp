@@ -43,16 +43,29 @@ void solar_system::remove_drift(){
 }
 
 void solar_system::F_G(int m){
+  /*
+  Method to calculate gravity between objects. Takes the index m to
+  keep track of timestep to extract positions
+  */
   double G = 6.67e-11;
-  double F[3] = {};
-  //Loop over planets
-  //F[];
+  F = new double[3*m_N];
+  //Loop over every object
   for(int k=0; k<m_N; k++){
-    if(k != m){
-      F += ;
+    //Loop over every other object to calculate gravity
+    F[3*k] = 0;
+    F[3*k+1] = 0;
+    F[3*k+2] = 0;
+    for(int j=0; j<m_N; j++){
+      if(j!=k){
+        F[3*k] += m_mass[j]/((m_x[m+k] - m_x[m+j])*(m_x[m+k] - m_x[m+j]));
+        F[3*k+1] += m_mass[j]/((m_y[m+k] - m_y[m+j])*(m_y[m+k] - m_y[m+j]));
+        F[3*k+2] += m_mass[j]/((m_z[m+k] - m_z[m+j])*(m_z[m+k] - m_z[m+j]));
+      }
+      F[3*k] *= -G*m_mass[k/3];
+      F[3*k+1] *= -G*m_mass[k/3];
+      F[3*k+2] *= -G*m_mass[k/3];
+      }
     }
-  }
-  return F;
 }
 
 
