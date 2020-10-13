@@ -8,7 +8,7 @@
 int main(int argc, char *argv[]){
   int N = atoi(argv[1]);
   int Nt = atoi(argv[2]);
-  double T = 1000*Nt;
+  double T = 1e4*Nt;
   string filename = "solar.txt";
   solar_system solar_solver;
   solar_solver.initialize(N, Nt, T);
