@@ -56,6 +56,7 @@ void solar_system::remove_drift(){
   */
   double R[3] = {0,0,0};
   double V[3] = {0,0,0};
+  double m_tot = 0;
   for(int i=0; i<m_N; i++){
     R[0] += m_mass[i]*m_x[i];
     R[1] += m_mass[i]*m_y[i];
@@ -63,28 +64,15 @@ void solar_system::remove_drift(){
     V[0] += m_mass[i]*m_vx[i];
     V[1] += m_mass[i]*m_vy[i];
     V[2] += m_mass[i]*m_vz[i];
-  }
-  double r_den[3] = {0,0,0};
-  double v_den[3] = {0,0,0};
-  for(int j=0; j<m_N; j++){
-    r_den[0] += m_mass[j];
-    r_den[1] += m_mass[j];
-    r_den[2] += m_mass[j];
-    v_den[0] += m_mass[j];
-    v_den[1] += m_mass[j];
-    v_den[2] += m_mass[j];
-  }
-  for(int k=0; k<3; k++){
-  R[k] /= r_den[k];
-  V[k] /= v_den[k];
+    m_tot += m_mass[i];
   }
   for(int l=0; l<m_N; l++){
-    m_x[l] -= R[0];
-    m_y[l] -= R[1];
-    m_z[l] -= R[2];
-    m_vx[l] -= V[0];
-    m_vy[l] -= V[1];
-    m_vz[l] -= V[2];
+    m_x[l] -= R[0]/m_tot;
+    m_y[l] -= R[1]/m_tot;
+    m_z[l] -= R[2]/m_tot;
+    m_vx[l] -= V[0]/m_tot;
+    m_vy[l] -= V[1]/m_tot;
+    m_vz[l] -= V[2]/m_tot;
   }
 }
 

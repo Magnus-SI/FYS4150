@@ -1,13 +1,15 @@
 import numpy as np
 import os
 import pandas as pd
-from astropy import constants
+from astropy import constants, units
+import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 initial_raw = open("initial_raw.txt", "r")
 print("Opening intitial_raw.txt and extracting initial values")
 
-n = int(input("How many planets to include: "))
+n = int(input("How many planets to include (Pluto is a plantet!): ")) + 1
+nt = int(input("How many timesteps: "))
 
 objects = []
 mass = []       #1e24 kg
@@ -65,22 +67,37 @@ exe = "main.out"
 os.system("echo compiling programs...")
 compile = " ".join(["c++", "-o", exe, main, super])
 os.system(compile)
-os.system("./"+exe+" "+str(n))
+os.system("./"+exe+" "+str(n)+" "+str(nt))
 
 data = pd.read_csv("solar.txt")
 
-x = data["x"]
-y = data["y"]
-z = data["z"]
+x = data["x"]*units.m.to("au")
+y = data["y"]*units.m.to("au")
+z = data["z"]*units.m.to("au")
 vx = data["vx"]
 vy = data["vy"]
 vz = data["vz"]
 
+X = np.zeros((nt,n))
+Y = np.copy(X)
+Z = np.copy(Y)
 
-"""fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x,y,z)
-plt.show()"""
+for i in range(n):
+    X[:,i] = x[i::n]
+    Y[:,i] = y[i::n]
+    Z[:,i] = z[i::n]
 
-plt.plot(x,y,'.')
+for k in range(n):
+    plt.plot(X[:,k], Y[:,k])
+plt.axis("equal")
 plt.show()
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+for j in range(n):
+    ax.plot(X[0::10,j],Y[0::10,j],Z[0::10,j])
+plt.show()
+
+"""plt.plot(x,y,'.')
+plt.axis("equal")
+plt.show()"""
