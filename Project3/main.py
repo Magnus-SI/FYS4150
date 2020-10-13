@@ -2,6 +2,7 @@ import numpy as np
 import os
 import pandas as pd
 from astropy import constants
+from mpl_toolkits.mplot3d import Axes3D
 
 initial_raw = open("initial_raw.txt", "r")
 print("Opening intitial_raw.txt and extracting initial values")
@@ -57,3 +58,29 @@ print("Writing mass for objects to file")
 for line in range(n):
     mass_file.write(str(mass[line])+"\n")
 mass_file.close()
+
+main = "main.cpp"
+super = "solar_system.cpp"
+exe = "main.out"
+os.system("echo compiling programs...")
+compile = " ".join(["c++", "-o", exe, main, super])
+os.system(compile)
+os.system("./"+exe+" "+str(n))
+
+data = pd.read_csv("solar.txt")
+
+x = data["x"]
+y = data["y"]
+z = data["z"]
+vx = data["vx"]
+vy = data["vy"]
+vz = data["vz"]
+
+
+"""fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(x,y,z)
+plt.show()"""
+
+plt.plot(x,y,'.')
+plt.show()

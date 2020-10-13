@@ -5,11 +5,10 @@
 #include <iomanip>
 #include <string>
 
-int main(){
-  int N, Nt;
-  N = 3;
-  Nt = 100000;
-  double T = 1e6;
+int main(int argc, char *argv[]){
+  int N = atoi(argv[1]);
+  int Nt = 10000;
+  double T = 1e8;
   string filename = "solar.txt";
   solar_system solar_solver;
   solar_solver.initialize(N, Nt, T);
