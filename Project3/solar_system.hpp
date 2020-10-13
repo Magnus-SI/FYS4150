@@ -8,9 +8,9 @@ class solar_system {
 
 protected:
   int m_N, m_Nt; //number of objects and time steps
-  double* m_x;
-  double* m_y;
-  double* m_z; //positions
+  //double* m_x;
+  //double* m_y;
+  //double* m_z; //positions
   double* m_vx;
   double* m_vy;
   double* m_vz; // velocities
@@ -20,6 +20,7 @@ protected:
   double* m_mass; //masses of sun and planets
   double h; //step size
   ofstream m_ofile;
+  double *m_x, *m_y, *m_z;
 
 public:
   void initialize(int N, int Nt, double T);
