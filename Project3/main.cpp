@@ -8,10 +8,11 @@
 int main(int argc, char *argv[]){
   int N = atoi(argv[1]);
   int Nt = atoi(argv[2]);
+  double beta = 2;
   double T = 1e4*Nt;
   string filename = "solar.txt";
   solar_system solar_solver;
-  solar_solver.initialize(N, Nt, T);
+  solar_solver.initialize(N, Nt, T, beta);
   solar_solver.remove_drift();
   solar_solver.F_G(0);
   for(int l=0; l<Nt-1; l++){

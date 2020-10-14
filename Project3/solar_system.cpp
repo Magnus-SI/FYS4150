@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void solar_system::initialize(int N, int Nt, double T){
+void solar_system::initialize(int N, int Nt, double T, double beta){
   /*
   Loads initial positions and velocities for the planets from a file.
   Using	Solar System Barycenter (SSB) coordinates.
@@ -13,6 +13,7 @@ void solar_system::initialize(int N, int Nt, double T){
   //Number of objects and timesteps.
   m_N = N;
   m_Nt = Nt;
+  m_beta = beta;
   //Step-length
   h = T/Nt;
   m_x = new double[m_N*m_Nt];
@@ -90,7 +91,7 @@ void solar_system::F_G(int m){
       if(j!=k){
         r_norm = pow(((m_x[m+k] - m_x[m+j])*(m_x[m+k] - m_x[m+j]) +
                   (m_y[m+k] - m_y[m+j])*(m_y[m+k] - m_y[m+j]) +
-                  (m_z[m+k] - m_z[m+j])*(m_z[m+k] - m_z[m+j])), 1.5);
+                  (m_z[m+k] - m_z[m+j])*(m_z[m+k] - m_z[m+j])), (m_beta+1)/(double)2);
         m_ax[m+k] += m_mass[j]*(m_x[m+k] - m_x[m+j])/r_norm;
         m_ay[m+k] += m_mass[j]*(m_y[m+k] - m_y[m+j])/r_norm;
         m_az[m+k] += m_mass[j]*(m_z[m+k] - m_z[m+j])/r_norm;
@@ -105,7 +106,7 @@ void solar_system::F_G(int m){
 
 void solar_system::velocity_verlet(int m){
   /*
-  Evolves system one time-step. Takes the index m to
+  Evolves system one time-step using the velocity-verlet algorithm. Takes the index m to
   keep track of timestep to extract positions
   */
   m *= m_N;
@@ -120,6 +121,26 @@ void solar_system::velocity_verlet(int m){
     m_vy[m+m_N+j] = m_vy[m+j] + h/2*(m_ay[m+m_N+j] + m_ay[m+j]);
     m_vz[m+m_N+j] = m_vz[m+j] + h/2*(m_az[m+m_N+j] + m_az[m+j]);
   }
+}
+
+void solar_system::forward_euler(int m){
+  /*
+  Evolves system one time-step using the forward-euler algorithm. Takes the index m to
+  keep track of timestep to extract positions
+  */
+  m *= m_N;
+  for(int i=0; i<m_N; i++){
+    //Updating positions
+    m_x[m+m_N+i] = m_x[m+i] + h*m_vx[m+i];
+    m_y[m+m_N+i] = m_y[m+i] + h*m_vy[m+i];
+    m_z[m+m_N+i] = m_z[m+i] + h*m_vz[m+i];
+    //Updating velocities
+    m_vx[m+m_N+i] = m_vx[m+i] + h*m_ax[m+i];
+    m_vy[m+m_N+i] = m_vy[m+i] + h*m_ay[m+i];
+    m_vz[m+m_N+i] = m_vz[m+i] + h*m_az[m+i];
+  }
+  //Updating acceleration
+  F_G(m+m_N);
 }
 
 void solar_system::write_to_file(string filename)

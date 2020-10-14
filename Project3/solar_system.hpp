@@ -13,12 +13,14 @@ protected:
   double *m_ax, *m_ay, *m_az; //accelerations
   double* m_mass; //masses of sun and planets
   double h; //step size
+  double m_beta; //gravity power-law
   ofstream m_ofile;
 
 public:
-  void initialize(int N, int Nt, double T);
+  void initialize(int N, int Nt, double T, double beta);
   void remove_drift();
   void velocity_verlet(int m);
+  void forward_euler(int m);
   void F_G(int m);
   void write_to_file(string filename);
 };
