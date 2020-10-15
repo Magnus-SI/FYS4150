@@ -42,13 +42,47 @@ void solar_system::initialize(int N, int Nt, double T, double beta){
 
   fclose(fp_init); //Close file with initial conditions
   fclose(fp_mass); //Close file with masses.
+}
 
-  //Loop over every acceleration and set it to zero
-  for(int k=0; k<m_N*m_Nt; k++){
-    m_ax[k] = 0;
-    m_ay[k] = 0;
-    m_az[k] = 0;
+void solar_system::initialize_stupid(int N, int Nt, double T, double beta){
+  /*
+  Initializes the completely uninteresting case of only earth and sun which by the way
+  has a simple analytic solution
+  */
+  //Number of objects and timesteps.
+  m_N = N;
+  m_Nt = Nt;
+  m_beta = beta;
+  //Step-length
+  h = T/Nt;
+  m_x = new double[m_N*m_Nt];
+  m_y = new double[m_N*m_Nt];
+  m_z = new double[m_N*m_Nt];
+  m_vx = new double[m_N*m_Nt];
+  m_vy = new double[m_N*m_Nt];
+  m_vz = new double[m_N*m_Nt];
+  m_ax = new double[m_N*m_Nt];
+  m_ay = new double[m_N*m_Nt];
+  m_az = new double[m_N*m_Nt];
+  m_mass = new double[m_N*m_Nt];
+
+  char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
+  FILE *fp_mass = fopen(filename_mass, "r"); //Open file to read.
+
+  //Loop over each particle and extract its mass:
+  for (int i=0; i<m_N; i++){
+    m_x[i] = 0;
+    m_y[i] = 0;
+    m_z[i] = 0;
+    m_vx[i] = 0;
+    m_vy[i] = 0;
+    m_vz[i] = 0;
+    fscanf(fp_mass, "%lf", &m_mass[i]); //Extract mass for particle i.
   }
+  fclose(fp_mass); //Close file with masses.
+  //Set simple initial conditions for earth, earth is at 1 AU in x direction moving in y direction
+  m_x[1] = 1.496e+11; // [meter]
+  m_vy[1] = 29789;    // [meter/second]
 }
 
 void solar_system::remove_drift(){
@@ -86,6 +120,10 @@ void solar_system::F_G(int m){
   double r_norm;
   //Loop over every object
   for(int k=0; k<m_N; k++){
+    //Making sure its zero before we start adding
+    m_ax[m+k] = 0;
+    m_ay[m+k] = 0;
+    m_az[m+k] = 0;
     //Loop over every other object to calculate gravity
     for(int j=0; j<m_N; j++){
       if(j!=k){

@@ -94,8 +94,8 @@ plt.show()
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-for j in [0,1,3,4,6]:
-    ax.plot(X[0::10,j],Y[0::10,j],Z[0::10,j])    
+for j in range(n):
+    ax.plot(X[0::n,j],Y[0::n,j],Z[0::n,j])
 plt.show()
 
 """plt.plot(x,y,'.')

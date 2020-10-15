@@ -18,6 +18,7 @@ protected:
 
 public:
   void initialize(int N, int Nt, double T, double beta);
+  void initialize_stupid(int N, int Nt, double T, double beta);
   void remove_drift();
   void velocity_verlet(int m);
   void forward_euler(int m);
