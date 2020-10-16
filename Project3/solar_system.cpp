@@ -44,13 +44,13 @@ void solar_system::initialize(int N, int Nt, double T, double beta){
   fclose(fp_mass); //Close file with masses.
 }
 
-void solar_system::initialize_stupid(int N, int Nt, double T, double beta){
+void solar_system::initialize_earth_sun(int Nt, double T, double beta){
   /*
-  Initializes the completely uninteresting case of only earth and sun which by the way
-  has a simple analytic solution
+  Initializes the case of only earth and sun which by the way
+  has an analytic solution
   */
   //Number of objects and timesteps.
-  m_N = N;
+  m_N = 2;
   m_Nt = Nt;
   m_beta = beta;
   //Step-length
@@ -87,7 +87,7 @@ void solar_system::initialize_stupid(int N, int Nt, double T, double beta){
 
 void solar_system::remove_drift(){
   /*
-  removes total momentum of solar system to look at a "stationary" sun
+  removes total momentum of solar system to look at a stationary centre of mass system
   */
   double R[3] = {0,0,0};
   double V[3] = {0,0,0};
@@ -120,7 +120,7 @@ void solar_system::F_G(int m){
   double r_norm;
   //Loop over every object
   for(int k=0; k<m_N; k++){
-    //Making sure its zero before we start adding
+    //Making sure accerelations are zero before we start adding
     m_ax[m+k] = 0;
     m_ay[m+k] = 0;
     m_az[m+k] = 0;
