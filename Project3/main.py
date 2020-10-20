@@ -2,8 +2,7 @@ import numpy as np
 import os
 import pandas as pd
 from astropy import constants, units
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+
 
 initial_raw = open("initial_raw.txt", "r")
 print("Opening intitial_raw.txt and extracting initial values")
@@ -90,6 +89,8 @@ for i in range(n):
 
 for k in range(n):
     plt.plot(X[:,k], Y[:,k])
+#plt.ylim([-2,2])
+#plt.xlim([-2, 2])
 plt.axis("equal")
 plt.show()
 
@@ -97,8 +98,8 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 for j in range(n):
     ax.plot(X[0::n,j],Y[0::n,j],Z[0::n,j])
-plt.show()
 
+plt.show()
 """plt.plot(x,y,'.')
 plt.axis("equal")
 plt.show()"""

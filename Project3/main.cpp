@@ -4,13 +4,19 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 int main(int argc, char *argv[]){
   int N = atoi(argv[1]);
   int Nt = atoi(argv[2]);
   double beta = atof(argv[3]);
   double T = 1e5*Nt;
-  string filename = "solar.txt";
+
+  string filename = "solar";
+  std::stringstream params;
+  params << std::fixed << N << "_"<< std::setprecision(2) << beta <<"_" <<log10(Nt);
+  filename.append(params.str()).append(".txt");
+
   solar_system solar_solver;
   solar_solver.initialize(N, Nt, T, beta);
   solar_solver.remove_drift();
