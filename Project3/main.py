@@ -10,6 +10,7 @@ print("Opening intitial_raw.txt and extracting initial values")
 
 n = int(input("How many planets to include (Pluto is a plantet!): ")) + 1
 nt = int(input("How many timesteps: "))
+beta = float(input("Gravitational power-law (beta) : "))
 
 objects = []
 mass = []       #1e24 kg
@@ -67,7 +68,7 @@ exe = "main.out"
 os.system("echo compiling programs...")
 compile = " ".join(["c++", "-o", exe, main, super])
 os.system(compile)
-os.system("./"+exe+" "+str(n)+" "+str(nt))
+os.system("./"+exe+" "+str(n)+" "+str(nt)+" "+str(beta))
 
 data = pd.read_csv("solar.txt")
 
