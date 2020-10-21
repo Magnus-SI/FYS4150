@@ -5,9 +5,9 @@ from astropy import constants, units
 from mpl_toolkits.mplot3d import Axes3D
 
 nt = 1000
-n = 2
+n = 10
 
-data = pd.read_csv("solar.txt")
+data = pd.read_csv("solar10_2.00_3.00.txt")
 
 x = data["x"]*units.m.to("au")
 y = data["y"]*units.m.to("au")

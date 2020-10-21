@@ -17,6 +17,7 @@ protected:
   ofstream m_ofile;
 
 public:
+  void initvars(int N, int Nt, double T, double beta);
   void initialize(int N, int Nt, double T, double beta);
   void initialize_earth_sun(int Nt, double T, double beta);
   void remove_drift();

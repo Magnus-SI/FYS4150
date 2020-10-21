@@ -5,10 +5,9 @@
 
 using namespace std;
 
-void solar_system::initialize(int N, int Nt, double T, double beta){
+void solar_system::initvars(int N, int Nt, double T, double beta){
   /*
-  Loads initial positions and velocities for the planets from a file.
-  Using	Solar System Barycenter (SSB) coordinates.
+  Initializes the class variables
   */
   //Number of objects and timesteps.
   m_N = N;
@@ -16,6 +15,7 @@ void solar_system::initialize(int N, int Nt, double T, double beta){
   m_beta = beta;
   //Step-length
   h = T/Nt;
+  //Positional data
   m_x = new double[m_N*m_Nt];
   m_y = new double[m_N*m_Nt];
   m_z = new double[m_N*m_Nt];
@@ -26,6 +26,15 @@ void solar_system::initialize(int N, int Nt, double T, double beta){
   m_ay = new double[m_N*m_Nt];
   m_az = new double[m_N*m_Nt];
   m_mass = new double[m_N*m_Nt];
+}
+
+void solar_system::initialize(int N, int Nt, double T, double beta){
+  /*
+  Loads initial positions and velocities for the planets from a file.
+  Using	Solar System Barycenter (SSB) coordinates.
+  */
+  initvars(N, Nt, T, beta);
+
   char* filename_initial = "initial.txt";   //Each line of file gives initial condition for a particle on the form: x y z vx vy vz
   char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
 
@@ -49,22 +58,8 @@ void solar_system::initialize_earth_sun(int Nt, double T, double beta){
   Initializes the case of only earth and sun which by the way
   has an analytic solution
   */
-  //Number of objects and timesteps.
-  m_N = 2;
-  m_Nt = Nt;
-  m_beta = beta;
-  //Step-length
-  h = T/Nt;
-  m_x = new double[m_N*m_Nt];
-  m_y = new double[m_N*m_Nt];
-  m_z = new double[m_N*m_Nt];
-  m_vx = new double[m_N*m_Nt];
-  m_vy = new double[m_N*m_Nt];
-  m_vz = new double[m_N*m_Nt];
-  m_ax = new double[m_N*m_Nt];
-  m_ay = new double[m_N*m_Nt];
-  m_az = new double[m_N*m_Nt];
-  m_mass = new double[m_N*m_Nt];
+
+  initvars(2, Nt, T, beta);
 
   char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
   FILE *fp_mass = fopen(filename_mass, "r"); //Open file to read.
