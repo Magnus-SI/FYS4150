@@ -24,6 +24,7 @@ public:
   void velocity_verlet(int m);
   void forward_euler(int m);
   void F_G(int m);
+  void F_G_corrected(int m);
   void write_to_file(string filename);
 };
 #endif
