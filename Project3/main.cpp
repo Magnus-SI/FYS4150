@@ -24,11 +24,13 @@ int main(int argc, char *argv[]){
   for(int l=0; l<Nt-1; l++){
     solar_solver.velocity_verlet(l);
   }
+  int Nt_new = 100000;
+  int T_new = 1000*Nt_new;
   solar_solver.write_to_file(filename);
-  solar_solver.initialize_mercury_sun(1e4, 1e5*1e4, beta);
+  solar_solver.initialize_mercury_sun(Nt_new, T_new, beta);
   solar_solver.remove_drift();
   solar_solver.F_G_corrected(0);
-  for(int k=0; k<Nt-1; k++){
+  for(int k=0; k<Nt_new-1; k++){
     solar_solver.mercury(k);
   }
   solar_solver.write_to_file("mercury.txt");

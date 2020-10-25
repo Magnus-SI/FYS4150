@@ -183,17 +183,17 @@ void solar_system::F_G_corrected(int m){
     m_az[m+k] = 0;
   }
   //Only calculating gravity on mercury, sun is fixed
-  r_norm = pow(((m_x[m+1] - m_x[m])*(m_x[m+1] - m_x[m]) +
+  r_norm = pow((m_x[m+1] - m_x[m])*(m_x[m+1] - m_x[m]) +
             (m_y[m+1] - m_y[m])*(m_y[m+1] - m_y[m]) +
-            (m_z[m+1] - m_z[m])*(m_z[m+1] - m_z[m])), (m_beta+1)/(double)2);
+            (m_z[m+1] - m_z[m])*(m_z[m+1] - m_z[m]), 0.5);
   //length of cross product between vectors and b
   //l = pow((a2*b3 - a3*b2)**2 + (a3*b1 - a1*b3)**2 + (a1*b2 - a2*b1), 0.5)
-  l = pow((m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1])*(m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1]) +
+  l = (m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1])*(m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1]) +
         (m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1])*(m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1]) +
-        (m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1])*(m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1]), 0.5);
-  m_ax[m+1] += m_mass[0]*(m_x[m+1] - m_x[m])/r_norm*(1 + 3*l*l/pow(r_norm*c,2));
-  m_ay[m+1] += m_mass[0]*(m_y[m+1] - m_y[m])/r_norm*(1 + 3*l*l/pow(r_norm*c,2));
-  m_az[m+1] += m_mass[0]*(m_z[m+1] - m_z[m])/r_norm*(1 + 3*l*l/pow(r_norm*c,2));
+        (m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1])*(m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1]);
+  m_ax[m+1] += m_mass[0]*(m_x[m+1] - m_x[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
+  m_ay[m+1] += m_mass[0]*(m_y[m+1] - m_y[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
+  m_az[m+1] += m_mass[0]*(m_z[m+1] - m_z[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
   m_ax[m+1] *= -G;
   m_ay[m+1] *= -G;
   m_az[m+1] *= -G;
@@ -244,17 +244,16 @@ void solar_system::mercury(int m){
   Sun had index 0, mercury has index 1
   */
   m *= m_N;
-  for(int i=0; i<m_N; i++){
-    m_x[m+m_N+i] = m_x[m+i] + h*m_vx[m+i] + h*h/2*m_ax[m+i];
-    m_y[m+m_N+i] = m_y[m+i] + h*m_vy[m+i] + h*h/2*m_ay[m+i];
-    m_z[m+m_N+i] = m_z[m+i] + h*m_vz[m+i] + h*h/2*m_az[m+i];
-  }
+  m_x[m+m_N+1] = m_x[m+1] + h*m_vx[m+1] + h*h/2*m_ax[m+1];
+  m_y[m+m_N+1] = m_y[m+1] + h*m_vy[m+1] + h*h/2*m_ay[m+1];
+  m_z[m+m_N+1] = m_z[m+1] + h*m_vz[m+1] + h*h/2*m_az[m+1];
+  m_x[m+m_N] = 0;
+  m_y[m+m_N] = 0;
+  m_z[m+m_N] = 0;
   F_G_corrected(m+m_N);
-  for(int j=0; j<m_N; j++){
-    m_vx[m+m_N+j] = m_vx[m+j] + h/2*(m_ax[m+m_N+j] + m_ax[m+j]);
-    m_vy[m+m_N+j] = m_vy[m+j] + h/2*(m_ay[m+m_N+j] + m_ay[m+j]);
-    m_vz[m+m_N+j] = m_vz[m+j] + h/2*(m_az[m+m_N+j] + m_az[m+j]);
-  }
+  m_vx[m+m_N+1] = m_vx[m+1] + h/2*(m_ax[m+m_N+1] + m_ax[m+1]);
+  m_vy[m+m_N+1] = m_vy[m+1] + h/2*(m_ay[m+m_N+1] + m_ay[m+1]);
+  m_vz[m+m_N+1] = m_vz[m+1] + h/2*(m_az[m+m_N+1] + m_az[m+1]);
 }
 
 void solar_system::write_to_file(string filename)

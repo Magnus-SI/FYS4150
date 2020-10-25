@@ -48,7 +48,7 @@ vx_M = mercury["vx"]
 vy_M = mercury["vy"]
 vz_M = mercury["vz"]
 
-X_M = np.zeros((10*nt, 2))
+X_M = np.zeros((100000, 2))
 Y_M = X_M.copy()
 Z_M = X_M.copy()
 
