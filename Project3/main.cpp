@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
     solar_solver.velocity_verlet(l);
   }
   solar_solver.write_to_file(filename);
-  solar_solver.initialize_mercury_sun(1000000, 1e4*Nt, beta);
+  solar_solver.initialize_mercury_sun(1e4, 1e5*1e4, beta);
   solar_solver.remove_drift();
   solar_solver.F_G_corrected(0);
   for(int k=0; k<Nt-1; k++){

@@ -109,9 +109,6 @@ void solar_system::initialize_mercury_sun(int Nt, double T, double beta){
 
   fclose(fp_init); //Close file with initial conditions
   fclose(fp_mass); //Close file with masses.
-  cout << m_mass[1] << endl;
-  cout << m_x[1] << ", " << m_y[1] << ", " << m_z[1] << endl;
-  cout << m_vx[1] << ", " << m_vy[1] << ", " << m_vz[1] << endl;
 }
 
 void solar_system::remove_drift(){
