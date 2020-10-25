@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <string>
 #include <sstream>
+#define G 6.67408e-11
+#define c 299792458
 
 using namespace std;
 
@@ -170,7 +172,6 @@ void solar_system::F_G(int m){
   Method to calculate gravity between objects. Takes the index m to
   keep track of timestep to extract positions
   */
-  double G = 6.67e-11;
   double r_norm;
   //Loop over every object
   for(int k=0; k<m_N; k++){
@@ -203,8 +204,6 @@ void solar_system::F_G_corrected(int m){
   Method to calculate gravity between mercury and sun, corrected for general relativity.
   Takes the index m to keep track of timestep to extract positions
   */
-  double G = 6.67e-11;
-  double c = 3e8;
   double r_norm, l;
   //Loop over objects
   for(int k=0; k<m_N; k++){
@@ -218,10 +217,12 @@ void solar_system::F_G_corrected(int m){
             (m_y[m+1] - m_y[m])*(m_y[m+1] - m_y[m]) +
             (m_z[m+1] - m_z[m])*(m_z[m+1] - m_z[m]), 0.5);
   //length of cross product between vectors and b
-  //l = pow((a2*b3 - a3*b2)**2 + (a3*b1 - a1*b3)**2 + (a1*b2 - a2*b1), 0.5)
-  l = (m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1])*(m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1]) +
+  /*l = (m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1])*(m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1]) +
         (m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1])*(m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1]) +
-        (m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1])*(m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1]);
+        (m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1])*(m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1]);*/
+  l = (m_x[m+1]*m_x[m+1] + m_y[m+1]*m_y[m+1] + m_z[m+1]*m_z[m+1])*
+      (m_vx[m+1]*m_vx[m+1] + m_vy[m+1]*m_vy[m+1] + m_vz[m+1]*m_vz[m+1]) -
+      pow(m_x[m+1]*m_vx[m+1] + m_y[m+1]*m_vy[m+1] + m_z[m+1]*m_vz[m+1], 2);
   m_ax[m+1] += m_mass[0]*(m_x[m+1] - m_x[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
   m_ay[m+1] += m_mass[0]*(m_y[m+1] - m_y[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
   m_az[m+1] += m_mass[0]*(m_z[m+1] - m_z[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
@@ -296,7 +297,6 @@ double* solar_system::conserved_quants(int m){
   m*= m_N;
   double *cq;
   cq = new double[4];
-  double G = 6.67e-11;
 
   double r2init = pow(m_x[1] - m_x[0], 2) + pow(m_y[1] - m_y[0], 2) +
                   pow(m_z[1] - m_z[0], 2);
