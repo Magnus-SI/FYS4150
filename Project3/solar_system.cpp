@@ -3,10 +3,13 @@
 #include <cmath>
 #include <iostream>
 #include <stdio.h>
+#include <iomanip>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
-void solar_system::initvars(int N, int Nt, double T, double beta){
+void solar_system::initvars(int N, int Nt, double T, double beta, int fs){
   /*
   Initializes the class variables
   */
@@ -16,6 +19,8 @@ void solar_system::initvars(int N, int Nt, double T, double beta){
   m_beta = beta;
   //Step-length
   h = T/Nt;
+  //Fixed sun (0 if no, 1 if yes)
+  fixed_sun = fs;
   //Positional data
   m_x = new double[m_N*m_Nt];
   m_y = new double[m_N*m_Nt];
@@ -29,12 +34,12 @@ void solar_system::initvars(int N, int Nt, double T, double beta){
   m_mass = new double[m_N];
 }
 
-void solar_system::initialize(int N, int Nt, double T, double beta){
+void solar_system::initialize(int N, int Nt, double T, double beta, int fs){
   /*
   Loads initial positions and velocities for the planets from a file.
   Using	Solar System Barycenter (SSB) coordinates.
   */
-  initvars(N, Nt, T, beta);
+  initvars(N, Nt, T, beta, fs);
 
   char* filename_initial = "initial.txt";   //Each line of file gives initial condition for a particle on the form: x y z vx vy vz
   char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
@@ -54,13 +59,13 @@ void solar_system::initialize(int N, int Nt, double T, double beta){
   fclose(fp_mass); //Close file with masses.
 }
 
-void solar_system::initialize_earth_sun(int Nt, double T, double beta){
+void solar_system::initialize_earth_sun(int Nt, double T, double beta, int elliptical){
   /*
   Initializes the case of only earth and sun which by the way
   has an analytic solution
   */
 
-  initvars(2, Nt, T, beta);
+  initvars(2, Nt, T, beta, 1);
 
   char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
   FILE *fp_mass = fopen(filename_mass, "r"); //Open file to read.
@@ -77,8 +82,12 @@ void solar_system::initialize_earth_sun(int Nt, double T, double beta){
   }
   fclose(fp_mass); //Close file with masses.
   //Set simple initial conditions for earth, earth is at 1 AU in x direction moving in y direction
-  m_x[1] = 1.496e+11; // [meter]
-  m_vy[1] = 29789;    // [meter/second]
+  m_x[1] = 1.495979e+11; // [meter]
+  m_vy[1] = pow(6.67e-11*m_mass[0]/m_x[1], 0.5);    // [meter/second]
+  if (elliptical == 1){   //elliptical orbit
+    m_vy[1] = 5 * 1.495979e+11/(365*24*3600);
+  }
+
 }
 
 void solar_system::initialize_mercury_sun(int Nt, double T, double beta){
@@ -87,7 +96,7 @@ void solar_system::initialize_mercury_sun(int Nt, double T, double beta){
   has an analytic solution
   */
 
-  initvars(2, Nt, T, beta);
+  initvars(2, Nt, T, beta, 1);
 
   char* filename_initial = "initial.txt";   //Each line of file gives initial condition for a particle on the form: x y z vx vy vz
   char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
@@ -109,6 +118,10 @@ void solar_system::initialize_mercury_sun(int Nt, double T, double beta){
 
   fclose(fp_init); //Close file with initial conditions
   fclose(fp_mass); //Close file with masses.
+}
+
+void solar_system::set_jupiter_mass(int factor){
+  m_mass[2] *= factor;
 }
 
 void solar_system::remove_drift(){
@@ -137,6 +150,20 @@ void solar_system::remove_drift(){
   }
 }
 
+void solar_system::center_sun(){
+  /*
+  Puts the sun at centrum coordinates with no velocity.
+  */
+  for(int i=0; i<m_N; i++){
+    m_x[i] -= m_x[0];
+    m_y[i] -= m_y[0];
+    m_z[i] -= m_z[0];
+    m_vx[i] -= m_vx[0];
+    m_vy[i] -= m_vy[0];
+    m_vz[i] -= m_vz[0];
+  }
+}
+
 void solar_system::F_G(int m){
   /*
   Method to calculate gravity between objects. Takes the index m to
@@ -151,19 +178,22 @@ void solar_system::F_G(int m){
     m_ay[m+k] = 0;
     m_az[m+k] = 0;
     //Loop over every other object to calculate gravity
-    for(int j=0; j<m_N; j++){
-      if(j!=k){
-        r_norm = pow(((m_x[m+k] - m_x[m+j])*(m_x[m+k] - m_x[m+j]) +
-                  (m_y[m+k] - m_y[m+j])*(m_y[m+k] - m_y[m+j]) +
-                  (m_z[m+k] - m_z[m+j])*(m_z[m+k] - m_z[m+j])), (m_beta+1)/(double)2);
-        m_ax[m+k] += m_mass[j]*(m_x[m+k] - m_x[m+j])/r_norm;
-        m_ay[m+k] += m_mass[j]*(m_y[m+k] - m_y[m+j])/r_norm;
-        m_az[m+k] += m_mass[j]*(m_z[m+k] - m_z[m+j])/r_norm;
+    if(k>=fixed_sun){
+      for(int j=0; j<m_N; j++){
+        if(j!=k){
+          r_norm = pow(((m_x[m+k] - m_x[m+j])*(m_x[m+k] - m_x[m+j]) +
+                    (m_y[m+k] - m_y[m+j])*(m_y[m+k] - m_y[m+j]) +
+                    (m_z[m+k] - m_z[m+j])*(m_z[m+k] - m_z[m+j])), (m_beta+1)/(double)2);
+          m_ax[m+k] += m_mass[j]*(m_x[m+k] - m_x[m+j])/r_norm;
+          m_ay[m+k] += m_mass[j]*(m_y[m+k] - m_y[m+j])/r_norm;
+          m_az[m+k] += m_mass[j]*(m_z[m+k] - m_z[m+j])/r_norm;
+        }
       }
+      m_ax[m+k] *= -G;
+      m_ay[m+k] *= -G;
+      m_az[m+k] *= -G;
     }
-    m_ax[m+k] *= -G;
-    m_ay[m+k] *= -G;
-    m_az[m+k] *= -G;
+
   }
 }
 
@@ -266,21 +296,26 @@ double* solar_system::conserved_quants(int m){
   double *cq;
   cq = new double[4];
   double G = 6.67e-11;
-  double KEinit = m_mass[1] * 0.5 * pow(29789, 2);
-  double PEinit = G * m_mass[0] * m_mass[1] / pow(1.496e+11, 2);
+
+  double r2init = pow(m_x[1] - m_x[0], 2) + pow(m_y[1] - m_y[0], 2) +
+                  pow(m_z[1] - m_z[0], 2);
+  double v2init = pow(m_vx[1] - m_vx[0], 2) + pow(m_vy[1] - m_vy[0], 2) +
+                  pow(m_vz[1] - m_vz[0], 2);
 
   double r2 = pow(m_x[m + 1] - m_x[m], 2) + pow(m_y[m + 1] - m_y[m], 2) +
               pow(m_z[m + 1] - m_z[m], 2);
   double v2 = pow(m_vx[m + 1] - m_vx[m], 2) + pow(m_vy[m + 1] - m_vy[m], 2) +
               pow(m_vz[m + 1] - m_vz[m], 2);
 
+  double KEinit = m_mass[1] * v2init;
+  double PEinit = G * m_mass[0] * m_mass[1] / r2init;
   double KE = 0.5 * m_mass[1] * v2;
   double PE = G * m_mass[0] * m_mass[1] / r2;
 
   cq[0] = KE / KEinit;
-  cq[1] = PE /PEinit;
+  cq[1] = PE / PEinit;
   cq[2] = (KE + PE) / (KEinit + PEinit);
-  cq[3] = r2/pow(1.496e+11, 2);
+  cq[3] = r2/r2init;
 
   return cq;
 
@@ -291,6 +326,10 @@ void solar_system::write_to_file(string filename)
   /*
   Stores the positions and velocities in a file
   */
+  std::stringstream params;
+  params << std::fixed << m_N << "_"<< std::setprecision(2) << m_beta <<"_" <<log10(m_Nt);
+  filename.append(params.str()).append(".txt");
+
   m_ofile.open(filename);
   m_ofile << "x,y,z,vx,vy,vz" << endl;
   for (int i=0; i<m_Nt*m_N; i++){

@@ -8,9 +8,10 @@
 #include "time.h"
 
 TEST_CASE("EulerVerlet"){
-  int Nt = 10000;
+  int Nt;
   double beta = 2;
   double T = 3e8;   //about 10 years
+  int elliptical = 0;
 
   ofstream ofile;
   ofile.open("timeacc.csv");
@@ -20,13 +21,13 @@ TEST_CASE("EulerVerlet"){
   solar_system euler_solver;
   double time1, time2, time3, euler_time, verlet_time, euler_err, verlet_err;
 
-  for (int i = 3; i<8; i++){
-    int Nt = pow(10, i);
-    verlet_solver.initialize_earth_sun(Nt, T, beta);
-    verlet_solver.remove_drift();
+  for (int i = 3; i<7; i++){
+    Nt = pow(10, i);
+    verlet_solver.initialize_earth_sun(Nt, T, beta, elliptical);
+    //verlet_solver.remove_drift();
     verlet_solver.F_G(0);
-    euler_solver.initialize_earth_sun(Nt, T, beta);
-    euler_solver.remove_drift();
+    euler_solver.initialize_earth_sun(Nt, T, beta, elliptical);
+    //euler_solver.remove_drift();
     euler_solver.F_G(0);
 
     time1 = clock();
@@ -49,6 +50,8 @@ TEST_CASE("EulerVerlet"){
 
     ofile << i << "," << euler_time << verlet_time << euler_err << verlet_err <<endl;
 
+    //verlet_solver.write_to_file("yo.txt");
+
   }
   ofile.close();
 
@@ -60,4 +63,8 @@ TEST_CASE("EulerVerlet"){
   //
   // }
 
+}
+
+TEST_CASE("Angular Momentum Conservation"){
+  int N;
 }

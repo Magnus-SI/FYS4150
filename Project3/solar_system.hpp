@@ -8,6 +8,7 @@ class solar_system {
 
 protected:
   int m_N, m_Nt; //number of objects and time steps
+  int fixed_sun; //whether or not the sun is affected by gravity.
   double *m_x, *m_y, *m_z; //positions
   double *m_vx, *m_vy, *m_vz; //velocities
   double *m_ax, *m_ay, *m_az; //accelerations
@@ -17,11 +18,13 @@ protected:
   ofstream m_ofile;
 
 public:
-  void initvars(int N, int Nt, double T, double beta);
-  void initialize(int N, int Nt, double T, double beta);
-  void initialize_earth_sun(int Nt, double T, double beta);
+  void initvars(int N, int Nt, double T, double beta, int fs);
+  void initialize(int N, int Nt, double T, double beta, int fs);
+  void initialize_earth_sun(int Nt, double T, double beta, int elliptical);
   void initialize_mercury_sun(int Nt, double T, double beta);
+  void set_jupiter_mass(int factor);
   void remove_drift();
+  void center_sun();
   void velocity_verlet(int m);
   void forward_euler(int m);
   void F_G(int m);
