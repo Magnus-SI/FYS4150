@@ -26,7 +26,7 @@ void solar_system::initvars(int N, int Nt, double T, double beta){
   m_ax = new double[m_N*m_Nt];
   m_ay = new double[m_N*m_Nt];
   m_az = new double[m_N*m_Nt];
-  m_mass = new double[m_N*m_Nt];
+  m_mass = new double[m_N];
 }
 
 void solar_system::initialize(int N, int Nt, double T, double beta){
@@ -254,6 +254,36 @@ void solar_system::mercury(int m){
   m_vx[m+m_N+1] = m_vx[m+1] + h/2*(m_ax[m+m_N+1] + m_ax[m+1]);
   m_vy[m+m_N+1] = m_vy[m+1] + h/2*(m_ay[m+m_N+1] + m_ay[m+1]);
   m_vz[m+m_N+1] = m_vz[m+1] + h/2*(m_az[m+m_N+1] + m_az[m+1]);
+}
+
+double* solar_system::conserved_quants(int m){
+  /*
+  Returns conserved quantities between the sun and the earth in the 2-planet
+  system, given index m, in terms of their original values
+  */
+
+  m*= m_N;
+  double *cq;
+  cq = new double[4];
+  double G = 6.67e-11;
+  double KEinit = m_mass[1] * 0.5 * pow(29789, 2);
+  double PEinit = G * m_mass[0] * m_mass[1] / pow(1.496e+11, 2);
+
+  double r2 = pow(m_x[m + 1] - m_x[m], 2) + pow(m_y[m + 1] - m_y[m], 2) +
+              pow(m_z[m + 1] - m_z[m], 2);
+  double v2 = pow(m_vx[m + 1] - m_vx[m], 2) + pow(m_vy[m + 1] - m_vy[m], 2) +
+              pow(m_vz[m + 1] - m_vz[m], 2);
+
+  double KE = 0.5 * m_mass[1] * v2;
+  double PE = G * m_mass[0] * m_mass[1] / r2;
+
+  cq[0] = KE / KEinit;
+  cq[1] = PE /PEinit;
+  cq[2] = (KE + PE) / (KEinit + PEinit);
+  cq[3] = r2/pow(1.496e+11, 2);
+
+  return cq;
+
 }
 
 void solar_system::write_to_file(string filename)

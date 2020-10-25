@@ -70,23 +70,23 @@ compile = " ".join(["c++", "-o", exe, main, super])
 os.system(compile)
 os.system("./"+exe+" "+str(n)+" "+str(nt)+" "+str(beta))
 
-data = pd.read_csv("solar.txt")
-
-x = data["x"]*units.m.to("au")
-y = data["y"]*units.m.to("au")
-z = data["z"]*units.m.to("au")
-vx = data["vx"]
-vy = data["vy"]
-vz = data["vz"]
-
-X = np.zeros((nt,n))
-Y = np.copy(X)
-Z = np.copy(Y)
-
-for i in range(n):
-    X[:,i] = x[i::n]
-    Y[:,i] = y[i::n]
-    Z[:,i] = z[i::n]
+# data = pd.read_csv("solar.txt")
+#
+# x = data["x"]*units.m.to("au")
+# y = data["y"]*units.m.to("au")
+# z = data["z"]*units.m.to("au")
+# vx = data["vx"]
+# vy = data["vy"]
+# vz = data["vz"]
+#
+# X = np.zeros((nt,n))
+# Y = np.copy(X)
+# Z = np.copy(Y)
+#
+# for i in range(n):
+#     X[:,i] = x[i::n]
+#     Y[:,i] = y[i::n]
+#     Z[:,i] = z[i::n]
 
 """for k in range(n):
     plt.plot(X[:,k], Y[:,k])
