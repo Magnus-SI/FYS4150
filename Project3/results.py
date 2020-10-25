@@ -62,7 +62,15 @@ def jupiterplots():
 
 
 def solarplots():
-    pass
+    nt = 20000
+    n = 10
+    data = pd.read_csv("data/solar%i_2.00_%.2f.txt"%(n, np.log10(nt)))
+    r,v = mdimarr(data, nt, n)
+    plt.figure()
+    for i in range(n):
+        plt.plot(r[0, :, i], r[1, :, i], label = "planet %i"%i)
+    plt.legend()
+    plt.show()
 
 def mercury_recession():
     """

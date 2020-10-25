@@ -46,7 +46,7 @@ VZ = np.array(VZ)*constants.au.to("m").value/86400
 
 initial = open("initial.txt","w")
 print("Writing initial positions and velocities to file")
-for line in range(n):
+for line in range(n+1):
     initial.write(str(X[line])+" "+str(Y[line])+" "+str(Z[line])+" ")
     initial.write(str(VX[line])+" "+str(VY[line])+" "+str(VZ[line]))
     initial.write("\n")
