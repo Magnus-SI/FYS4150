@@ -160,9 +160,9 @@ void solar_system::F_G_corrected(int m){
   l = pow((m_y[m+6]*m_vz[m+6] - m_z[m+6]*m_vy[m+6])*(m_y[m+6]*m_vz[m+6] - m_z[m+6]*m_vy[m+6]) +
         (m_z[m+6]*m_vx[m+6] - m_x[m+6]*m_vz[m+6])*(m_z[m+6]*m_vx[m+6] - m_x[m+6]*m_vz[m+6]) +
         (m_x[m+6]*m_vy[m+6] - m_y[m+6]*m_vx[m+6])*(m_x[m+6]*m_vy[m+6] - m_y[m+6]*m_vx[m+6]), 0.5);
-  m_ax[m+6] += m_mass[j]*(m_x[m+k] - m_x[m+j])/r_norm*(1 + 3*l*l/pow(r*c,2));
-  m_ay[m+6] += m_mass[j]*(m_y[m+k] - m_y[m+j])/r_norm*(1 + 3*l*l/pow(r*c,2));
-  m_az[m+6] += m_mass[j]*(m_z[m+k] - m_z[m+j])/r_norm*(1 + 3*l*l/pow(r*c,2));
+  m_ax[m+6] += m_mass[0]*(m_x[m+6] - m_x[m])/r_norm*(1 + 3*l*l/pow(r*c,2));
+  m_ay[m+6] += m_mass[0]*(m_y[m+6] - m_y[m])/r_norm*(1 + 3*l*l/pow(r*c,2));
+  m_az[m+6] += m_mass[0]*(m_z[m+6] - m_z[m])/r_norm*(1 + 3*l*l/pow(r*c,2));
   m_ax[m+6] *= -G;
   m_ay[m+6] *= -G;
   m_az[m+6] *= -G;
