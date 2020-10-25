@@ -48,7 +48,18 @@ def escvelplots():
     pass
 
 def jupiterplots():
-    pass
+    nt = 20000
+    n = 3
+    massms = np.array([1, 10, 1000])
+    plt.figure()
+    for m in massms:
+        data = pd.read_csv("data/m%.1fjupiter3_2.00_4.30.txt"%m)
+        r,v = mdimarr(data, nt, n)
+        for i in range(1,3):
+            plt.plot(r[0, :, i], r[1, :, i], label = "planet %i, mm = %i"%(i, m))
+    plt.legend()
+    plt.show()
+
 
 def solarplots():
     pass
