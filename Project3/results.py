@@ -26,8 +26,16 @@ def mdimarr(data, nt, n):
 
 
 def betaplots():
-
-    pass
+    nt = int(1e4)
+    n = 2
+    betas = np.array([2, 2.001, 2.01, 2.1, 3])
+    plt.figure()
+    for beta in betas:
+        data = pd.read_csv("data/earth_sun2_%.2f_4.00.txt"%beta)
+        r,v = mdimarr(data, nt, n)
+        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.2f$"%beta)
+    plt.legend()
+    plt.show()
 
 def escvelplots():
     pass
