@@ -2,6 +2,7 @@ import numpy as np
 import os
 import pandas as pd
 from astropy import constants, units
+import matplotlib.pyplot as plt
 
 
 initial_raw = open("initial_raw.txt", "r")
@@ -87,7 +88,7 @@ for i in range(n):
     Y[:,i] = y[i::n]
     Z[:,i] = z[i::n]
 
-for k in range(n):
+"""for k in range(n):
     plt.plot(X[:,k], Y[:,k])
 #plt.ylim([-2,2])
 #plt.xlim([-2, 2])
@@ -100,6 +101,6 @@ for j in range(n):
     ax.plot(X[0::n,j],Y[0::n,j],Z[0::n,j])
 
 plt.show()
-"""plt.plot(x,y,'.')
+plt.plot(x,y,'.')
 plt.axis("equal")
 plt.show()"""

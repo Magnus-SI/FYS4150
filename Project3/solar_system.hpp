@@ -20,6 +20,7 @@ public:
   void initvars(int N, int Nt, double T, double beta);
   void initialize(int N, int Nt, double T, double beta);
   void initialize_earth_sun(int Nt, double T, double beta);
+  void initialize_mercury_sun(int Nt, double T, double beta);
   void remove_drift();
   void velocity_verlet(int m);
   void forward_euler(int m);

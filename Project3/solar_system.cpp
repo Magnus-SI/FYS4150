@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cmath>
 #include <iostream>
+#include <stdio.h>
 
 using namespace std;
 
@@ -80,6 +81,39 @@ void solar_system::initialize_earth_sun(int Nt, double T, double beta){
   m_vy[1] = 29789;    // [meter/second]
 }
 
+void solar_system::initialize_mercury_sun(int Nt, double T, double beta){
+  /*
+  Initializes the case of only earth and sun which by the way
+  has an analytic solution
+  */
+
+  initvars(2, Nt, T, beta);
+
+  char* filename_initial = "initial.txt";   //Each line of file gives initial condition for a particle on the form: x y z vx vy vz
+  char* filename_mass = "masses.txt"; //Each line of the file contains a mass for a given particle.
+
+  //Open files
+  FILE *fp_init = fopen(filename_initial, "r"); //Open file to read, specified by "r".
+  FILE *fp_mass = fopen(filename_mass, "r"); //Open file to read.
+
+  fscanf(fp_init, "%lf %lf %lf %lf %lf %lf", &m_x[0], &m_y[0], &m_z[0], &m_vx[0], &m_vy[0], &m_vz[0]);
+  fscanf(fp_mass, "%lf", &m_mass[0]);
+  //Skip some objects
+  char my_string[1000];
+  for (int i=0; i<6; i++){
+    fgets(my_string, 1000, fp_init);
+    fgets(my_string, 1000, fp_mass);
+  }
+  fscanf(fp_init, "%lf %lf %lf %lf %lf %lf", &m_x[1], &m_y[1], &m_z[1], &m_vx[1], &m_vy[1], &m_vz[1]);
+  fscanf(fp_mass, "%lf", &m_mass[1]);
+
+  fclose(fp_init); //Close file with initial conditions
+  fclose(fp_mass); //Close file with masses.
+  cout << m_mass[1] << endl;
+  cout << m_x[1] << ", " << m_y[1] << ", " << m_z[1] << endl;
+  cout << m_vx[1] << ", " << m_vy[1] << ", " << m_vz[1] << endl;
+}
+
 void solar_system::remove_drift(){
   /*
   removes total momentum of solar system to look at a stationary centre of mass system
@@ -152,20 +186,20 @@ void solar_system::F_G_corrected(int m){
     m_az[m+k] = 0;
   }
   //Only calculating gravity on mercury, sun is fixed
-  r_norm = pow(((m_x[m+6] - m_x[m])*(m_x[m+6] - m_x[m]) +
-            (m_y[m+6] - m_y[m])*(m_y[m+6] - m_y[m]) +
-            (m_z[m+6] - m_z[m])*(m_z[m+6] - m_z[m])), (m_beta+1)/(double)2);
+  r_norm = pow(((m_x[m+1] - m_x[m])*(m_x[m+1] - m_x[m]) +
+            (m_y[m+1] - m_y[m])*(m_y[m+1] - m_y[m]) +
+            (m_z[m+1] - m_z[m])*(m_z[m+1] - m_z[m])), (m_beta+1)/(double)2);
   //length of cross product between vectors and b
   //l = pow((a2*b3 - a3*b2)**2 + (a3*b1 - a1*b3)**2 + (a1*b2 - a2*b1), 0.5)
-  l = pow((m_y[m+6]*m_vz[m+6] - m_z[m+6]*m_vy[m+6])*(m_y[m+6]*m_vz[m+6] - m_z[m+6]*m_vy[m+6]) +
-        (m_z[m+6]*m_vx[m+6] - m_x[m+6]*m_vz[m+6])*(m_z[m+6]*m_vx[m+6] - m_x[m+6]*m_vz[m+6]) +
-        (m_x[m+6]*m_vy[m+6] - m_y[m+6]*m_vx[m+6])*(m_x[m+6]*m_vy[m+6] - m_y[m+6]*m_vx[m+6]), 0.5);
-  m_ax[m+6] += m_mass[0]*(m_x[m+6] - m_x[m])/r_norm*(1 + 3*l*l/pow(r*c,2));
-  m_ay[m+6] += m_mass[0]*(m_y[m+6] - m_y[m])/r_norm*(1 + 3*l*l/pow(r*c,2));
-  m_az[m+6] += m_mass[0]*(m_z[m+6] - m_z[m])/r_norm*(1 + 3*l*l/pow(r*c,2));
-  m_ax[m+6] *= -G;
-  m_ay[m+6] *= -G;
-  m_az[m+6] *= -G;
+  l = pow((m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1])*(m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1]) +
+        (m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1])*(m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1]) +
+        (m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1])*(m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1]), 0.5);
+  m_ax[m+1] += m_mass[0]*(m_x[m+1] - m_x[m])/r_norm*(1 + 3*l*l/pow(r_norm*c,2));
+  m_ay[m+1] += m_mass[0]*(m_y[m+1] - m_y[m])/r_norm*(1 + 3*l*l/pow(r_norm*c,2));
+  m_az[m+1] += m_mass[0]*(m_z[m+1] - m_z[m])/r_norm*(1 + 3*l*l/pow(r_norm*c,2));
+  m_ax[m+1] *= -G;
+  m_ay[m+1] *= -G;
+  m_az[m+1] *= -G;
 }
 
 void solar_system::velocity_verlet(int m){
@@ -210,18 +244,16 @@ void solar_system::forward_euler(int m){
 void solar_system::mercury(int m){
   /*
   Studying mercury, and adding relativistic correction to gravity
-  Sun had index 0, mercury has index 6
+  Sun had index 0, mercury has index 1
   */
   m *= m_N;
-  for(int i=0; i<2; i++){
-    i*=6;
+  for(int i=0; i<m_N; i++){
     m_x[m+m_N+i] = m_x[m+i] + h*m_vx[m+i] + h*h/2*m_ax[m+i];
     m_y[m+m_N+i] = m_y[m+i] + h*m_vy[m+i] + h*h/2*m_ay[m+i];
     m_z[m+m_N+i] = m_z[m+i] + h*m_vz[m+i] + h*h/2*m_az[m+i];
   }
   F_G_corrected(m+m_N);
-  for(int j=0; j<2; j++){
-    j*=6;
+  for(int j=0; j<m_N; j++){
     m_vx[m+m_N+j] = m_vx[m+j] + h/2*(m_ax[m+m_N+j] + m_ax[m+j]);
     m_vy[m+m_N+j] = m_vy[m+j] + h/2*(m_ay[m+m_N+j] + m_ay[m+j]);
     m_vz[m+m_N+j] = m_vz[m+j] + h/2*(m_az[m+m_N+j] + m_az[m+j]);
