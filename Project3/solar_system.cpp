@@ -83,9 +83,10 @@ void solar_system::initialize_earth_sun(int Nt, double T, double beta, int ellip
   fclose(fp_mass); //Close file with masses.
   //Set simple initial conditions for earth, earth is at 1 AU in x direction moving in y direction
   m_x[1] = 1.495979e+11; // [meter]
-  m_vy[1] = pow(6.67e-11*m_mass[0]/m_x[1], 0.5);    // [meter/second]
+  m_vy[1] = pow(6.67e-11*m_mass[0]/pow(m_x[1], m_beta-1), 0.5);    // [meter/second]
   if (elliptical == 1){   //elliptical orbit
-    m_vy[1] = 5 * 1.495979e+11/(365*24*3600);
+    //m_vy[1] = 5 * 1.495979e+11/(365*24*3600);
+    m_vy[1] *= 1.2;
   }
 
 }

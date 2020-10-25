@@ -16,9 +16,9 @@ int main(int argc, char *argv[]){
 
   //First explore different values of beta with a fixed sun
   solar_system earth_sun;
-  Nt = 10000;
-  T = 3e8;
-  double betas[5] = {2,2.001,2.01, 2.1, 3};
+  Nt = 40000;
+  T = 12e8;
+  double betas[5] = {2,2.001,2.01, 2.1, 2.2};
   for (int i = 0; i<5; i++){
     earth_sun.initialize_earth_sun(Nt, T, betas[i], 0);
     earth_sun.F_G(0);
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 
   //Then explore different values of beta with elliptical orbit
   solar_system elliptical_earth_sun;
-  for (int i = 0; i<4; i++){
+  for (int i = 0; i<5; i++){
     earth_sun.initialize_earth_sun(Nt, T, betas[i], 1);
     earth_sun.F_G(0);
     for (int j = 0; j<Nt-1; j++){
