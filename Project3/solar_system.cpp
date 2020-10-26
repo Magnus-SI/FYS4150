@@ -322,6 +322,29 @@ double* solar_system::conserved_quants(int m){
 
 }
 
+double solar_system::Kep2Area(int m, int planet_ind){
+  /*
+  Calculates the Area which should be conserved by Keplers second law.
+  Equivalent to conservation of angular momentum.
+  At timsetep m for planet_ind. Only works for a fixed sun
+  */
+  //int ti_min = (m-5) * m_N
+  //int ti_max = (m+5) * m_N
+  m *= m_N;
+  double r2 = pow(m_x[m + planet_ind], 2) + pow(m_y[m + planet_ind], 2) +
+                  pow(m_z[m + planet_ind], 2);
+  double v2 = pow(m_vx[m + planet_ind], 2) + pow(m_vy[m + planet_ind], 2) +
+                  pow(m_vz[m + planet_ind], 2);
+  double dotprod =  m_x[m + planet_ind] * m_vx[m + planet_ind] +
+                    m_y[m + planet_ind] * m_vy[m + planet_ind] +
+                    m_z[m + planet_ind] * m_vz[m + planet_ind];
+  double coshteta = dotprod/(pow(r2*v2, 0.5));
+  double vtheta = pow(1-pow(costheta, 2), 0.5) * pow(v2, 0.5);
+  return 0.5 * pow(r2, 0.5) * svtheta;
+
+
+}
+
 void solar_system::write_to_file(string filename)
 {
   /*

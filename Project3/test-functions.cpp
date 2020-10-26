@@ -66,5 +66,14 @@ TEST_CASE("EulerVerlet"){
 }
 
 TEST_CASE("Angular Momentum Conservation"){
-  int N;
+  int Nt = 10000;
+  double beta = 2;
+  double T = 3e8;   //about 10 years
+  int elliptical = 1;
+  solar_system earth_sun
+  earth_sun.initialize_earth_sun(Nt, T, beta, elliptical);
+  earth_sun.F_G(0);
+  for(int m=0; m<Nt-1; m++){
+    earth_sun.velocity_verlet(m);
+  }
 }

@@ -30,6 +30,7 @@ public:
   void F_G(int m);
   void F_G_corrected(int m);
   void mercury(int m);
+  double Kep2Area(int m, int planet_ind);
   double* conserved_quants(int m);
   void write_to_file(string filename);
 };
