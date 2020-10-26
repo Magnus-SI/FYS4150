@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 
   //First explore different values of beta with a fixed sun
   solar_system earth_sun;
-  Nt = 100000;
+  Nt = 10000;
   T = 12e9;
   double betas[6] = {2,2.01,2.1, 2.2, 2.5, 3};
   for (int i = 0; i<6; i++){
@@ -43,6 +43,8 @@ int main(int argc, char *argv[]){
   solar_system esc_vels;
   double escv[3] = {pow(1.5, 0.5), pow(2, 0.5), pow(2.5, 0.5)};
   string filename0;
+  T = 1e9;
+  Nt = 40000;
   beta = 2;
   for (int i = 0; i<3; i++){
     esc_vels.initialize_earth_sun(Nt, T, beta, escv[i]);

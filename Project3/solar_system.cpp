@@ -359,7 +359,7 @@ double* solar_system::total_energy(int m){
     if (i!=0){
       r2 = pow(m_x[m + i] - m_x[m], 2) + pow(m_y[m + i] - m_y[m], 2) +
                   pow(m_z[m + i] - m_z[m], 2);
-      PE += G * m_mass[0] * m_mass[i] / pow(r2, 0.5);
+      PE += G * m_mass[0] * m_mass[i] / (pow(r2, 0.5 * (m_beta - 1))/(m_beta-1));
     }
 
     v2 = pow(m_vx[m + i], 2) + pow(m_vy[m + i], 2) + pow(m_vz[m + i], 2);
