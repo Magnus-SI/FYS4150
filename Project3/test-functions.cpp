@@ -96,14 +96,14 @@ TEST_CASE("All_Planet_Energy"){
   solar_solver.remove_drift();
   solar_solver.F_G(0);
   double* E0 = solar_solver.total_energy(0);
-  double totE0 = E0[0] + E0[1];
+  double totE0 = E0[0] - E0[1];
 
   for (int i = 0; i<Nt-1; i++){
     solar_solver.velocity_verlet(i);
     if(remainder(i,100) == 0){
       double* E = solar_solver.total_energy(i);
-      totE = E[0] + E[1];
-      REQUIRE(totE/totE0 == Approx(1).epsilon(1e-1));
+      totE = E[0] - E[1];
+      REQUIRE(totE/totE0 == Approx(1).epsilon(1e-3));
 
     }
   }
