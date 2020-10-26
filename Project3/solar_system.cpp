@@ -204,7 +204,7 @@ void solar_system::F_G_corrected(int m){
   Method to calculate gravity between mercury and sun, corrected for general relativity.
   Takes the index m to keep track of timestep to extract positions
   */
-  double r_norm, l;
+  double r_norm, v_norm, l_2;
   //Loop over objects
   for(int k=0; k<m_N; k++){
     //Making sure accerelations are zero before we start adding
@@ -216,16 +216,14 @@ void solar_system::F_G_corrected(int m){
   r_norm = pow((m_x[m+1] - m_x[m])*(m_x[m+1] - m_x[m]) +
             (m_y[m+1] - m_y[m])*(m_y[m+1] - m_y[m]) +
             (m_z[m+1] - m_z[m])*(m_z[m+1] - m_z[m]), 0.5);
-  //length of cross product between vectors and b squared
-  l = (m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1])*(m_y[m+1]*m_vz[m+1] - m_z[m+1]*m_vy[m+1]) +
-        (m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1])*(m_z[m+1]*m_vx[m+1] - m_x[m+1]*m_vz[m+1]) +
-        (m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1])*(m_x[m+1]*m_vy[m+1] - m_y[m+1]*m_vx[m+1]);
-  /*l = (m_x[m+1]*m_x[m+1] + m_y[m+1]*m_y[m+1] + m_z[m+1]*m_z[m+1])*
-      (m_vx[m+1]*m_vx[m+1] + m_vy[m+1]*m_vy[m+1] + m_vz[m+1]*m_vz[m+1]) -
-      pow(m_x[m+1]*m_vx[m+1] + m_y[m+1]*m_vy[m+1] + m_z[m+1]*m_vz[m+1], 2);*/
-  m_ax[m+1] += m_mass[0]*(m_x[m+1] - m_x[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
-  m_ay[m+1] += m_mass[0]*(m_y[m+1] - m_y[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
-  m_az[m+1] += m_mass[0]*(m_z[m+1] - m_z[m])/pow(r_norm, 3)*(1 + 3*l/pow(r_norm*c,2));
+  v_norm = pow((m_vx[m+1] - m_vx[m])*(m_vx[m+1] - m_vx[m]) +
+            (m_vy[m+1] - m_vy[m])*(m_vy[m+1] - m_vy[m]) +
+            (m_vz[m+1] - m_vz[m])*(m_vz[m+1] - m_vz[m]), 0.5);
+  //length of cross product between vectors a and b squared
+  l_2 = pow(r_norm, 2) + pow(v_norm,2) - pow(m_x[m+1]*m_vx[m+1] + m_y[m+1]*m_vy[m+1] + m_z[m+1]*m_vz[m+1], 2);
+  m_ax[m+1] += m_mass[0]*(m_x[m+1] - m_x[m])/pow(r_norm, 3)*(1 + 3*l_2/pow(r_norm*c,2));
+  m_ay[m+1] += m_mass[0]*(m_y[m+1] - m_y[m])/pow(r_norm, 3)*(1 + 3*l_2/pow(r_norm*c,2));
+  m_az[m+1] += m_mass[0]*(m_z[m+1] - m_z[m])/pow(r_norm, 3)*(1 + 3*l_2/pow(r_norm*c,2));
   m_ax[m+1] *= -G;
   m_ay[m+1] *= -G;
   m_az[m+1] *= -G;

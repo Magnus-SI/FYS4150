@@ -101,8 +101,8 @@ int main(int argc, char *argv[]){
 
   //Investigate mercury perihelion precession (fixed sun again)
   solar_system mercury;
-  Nt = 100000;
-  T = 1000*Nt;
+  T = 2*88*24*60*60;
+  Nt = 1000000;
   //solar_solver.write_to_file(filename);
   mercury.initialize_mercury_sun(Nt, T, beta);
   mercury.remove_drift();

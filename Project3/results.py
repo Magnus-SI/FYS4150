@@ -157,8 +157,8 @@ def mercury_recession():
     nt = int(1e6)
     n = 2
     r, v = mdimarr(data, nt, n)
-    r1 = r[:,:nt//100,1]
-    r2 = r[:,99*nt//100:,1]
+    r1 = r[:,:nt//2,1]
+    r2 = r[:,nt//2:,1]
     plt.figure()
     plt.plot(0,0,"*")
     plt.plot(r1[0], r1[1])
