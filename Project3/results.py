@@ -58,7 +58,7 @@ def betaplots():
     for beta in betas:
         data = pd.read_csv("data/elliptical_earth_sun2_%.2f_4.60.txt"%beta)
         r,v = mdimarr(data, nt, n)
-        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.2f$"%beta)
+        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.3f$"%beta)
     plt.legend()
     plt.axis("equal")
     plt.xlabel(r"$x$ [AU]")
@@ -68,7 +68,7 @@ def betaplots():
     for beta in betas:
         data = pd.read_csv("data/earth_sun2_%.2f_4.60.txt"%beta)
         r,v = mdimarr(data, nt, n)
-        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.2f$"%beta)
+        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.3f$"%beta)
     plt.axis("equal")
     plt.xlabel(r"$x$ [AU]")
     plt.ylabel(r"$y$ [AU]")
@@ -153,13 +153,35 @@ def mercury_recession():
     """
     Plots mercury orbit and calculates precession?
     """
-    data = pd.read_csv("data/mercury_2_2.00_5.00.txt")
-    nt = int(1e5)
+    data = pd.read_csv("data/mercury2_2.00_6.00.txt")
+    nt = int(1e6)
     n = 2
     r, v = mdimarr(data, nt, n)
-    pass
+    r1 = r[:,:nt//100,1]
+    r2 = r[:,99*nt//100:,1]
+    plt.figure()
+    plt.plot(0,0,"*")
+    plt.plot(r1[0], r1[1])
+    plt.plot(r2[0], r2[1])
+    plt.axis("equal")
+    r_min1 = np.argmin(r1[0]**2 + r1[1]**2)
+    x_p1 = r1[0, r_min1]
+    y_p1 = r1[1, r_min1]
+    r_min2 = np.argmin(r2[0]**2 + r2[1]**2)
+    x_p2 = r1[0, r_min2]
+    y_p2 = r1[1, r_min2]
+    plt.plot(x_p1, y_p1, 'x')
+    plt.plot(x_p2, y_p2, 'x')
+    plt.show()
+    theta1 = np.arctan(y_p1/x_p1)
+    theta2 = np.arctan(y_p2/x_p2)
 
-betaplots()
+    theta_p = (theta1 - theta2)*206265
+
+    print("Precession angle: %.2f\"" %theta_p)
+
+#betaplots()
+mercury_recession()
 
 if __name__ == "__main__":
     #call functions here as wanted
