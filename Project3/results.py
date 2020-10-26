@@ -24,6 +24,31 @@ def mdimarr(data, nt, n):
 
     return r, v
 
+def err_plots():
+    data = pd.read_csv("timeacc.csv")
+    logN = data["        log10N"]
+    eultime = data["eultime"]
+    vertime = data["vertime"]
+    eulerr = data["eulerr"]
+    vererr = data["vererr"]
+    plt.figure()
+    line1, = plt.plot(logN, np.log10(eultime), label=r"Euler time, $\log (t)$ [s]", color='b')
+    line2, = plt.plot(logN, np.log10(vertime), label=r"Verlet time, $\log (t)$ [s]", color='g')
+    line3, = plt.plot(logN, eulerr, ls="--", color='b', label="Euler accuracy")
+    line4, = plt.plot(logN, vererr, ls='--', color='g', label="Verlet accuracy")
+    line5, = plt.plot(logN, logN-7, ls='dashdot', color='r', label=r"$\mathcal{O}(N)$")
+    plt.xlabel(r"$\log_{10}(N)$")
+    # Create a legend for the first line.
+    first_legend = plt.legend(handles=[line2, line1, line5], loc='lower right')
+
+    # Add the legend manually to the current Axes.
+    ax = plt.gca().add_artist(first_legend)
+
+    # Create another legend for the second line.
+    plt.legend(handles=[line4, line3], loc='center left')
+    plt.xticks([3,4,5,6])
+    plt.tight_layout()
+    plt.savefig("figures/err_plots.pdf")
 
 def betaplots():
     nt = int(4e4)
@@ -35,12 +60,18 @@ def betaplots():
         r,v = mdimarr(data, nt, n)
         plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.2f$"%beta)
     plt.legend()
+    plt.axis("equal")
+    plt.xlabel(r"$x$ [AU]")
+    plt.ylabel(r"$y$ [AU]")
     plt.show()
     plt.figure()
     for beta in betas:
         data = pd.read_csv("data/earth_sun2_%.2f_4.60.txt"%beta)
         r,v = mdimarr(data, nt, n)
         plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.2f$"%beta)
+    plt.axis("equal")
+    plt.xlabel(r"$x$ [AU]")
+    plt.ylabel(r"$y$ [AU]")
     plt.legend()
     plt.show()
 
@@ -127,6 +158,8 @@ def mercury_recession():
     n = 2
     r, v = mdimarr(data, nt, n)
     pass
+
+betaplots()
 
 if __name__ == "__main__":
     #call functions here as wanted
