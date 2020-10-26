@@ -46,7 +46,7 @@ TEST_CASE("EulerVerlet"){
     euler_err = cqeuler[1];
     verlet_err = cqverlet[1];
 
-    ofile << i << "," << euler_time << verlet_time << euler_err << verlet_err <<endl;
+    ofile << i << "," << euler_time << "," << verlet_time << "," << euler_err << "," << verlet_err << endl;
 
     //verlet_solver.write_to_file("yo.txt");
 
