@@ -8,9 +8,6 @@ plt.rcParams.update({'font.size': 14})
 
 
 def mdimarr(data, nt, n):
-    """
-    Utility function
-    """
     x = data["x"]*units.m.to("au")
     y = data["y"]*units.m.to("au")
     z = data["z"]*units.m.to("au")
@@ -57,11 +54,7 @@ def err_plots():
     plt.savefig("figures/err_plots.pdf")
 
 def betaplots():
-    """
-    Plots xy-plane orbit maps with varying values of beta. Both elliptical
-    and circular orbits
-    """
-    nt = int(1e5)
+    nt = int(1e6)
     n = 2
     betas = np.array([2, 2.01, 2.1, 2.2, 2.5])
     plt.figure()
@@ -95,9 +88,6 @@ def betaplots():
 
 
 def escvelplots():
-    """
-    Plots escape velocity plots
-    """
     nt = int(4e4)
     n = 2
     vfacs = np.sqrt(np.array([1.5, 2, 2.5]))
@@ -115,9 +105,6 @@ def escvelplots():
 
 
 def jupiterplots():
-    """
-    Plots Jupiter plots
-    """
     nt = 20000
     n = 3
     massms = np.array([1,10, 1000])
@@ -141,23 +128,13 @@ def jupiterplots():
     #plt.savefig("figures/fsunjup.pdf")
 
     plt.figure(1)
-    nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.000_%.3f.txt"%(10, np.log10(nt)))
+    nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.000_%.3f.txt"%(1000, np.log10(nt)))
     r,v = mdimarr(nfdata, nt, n)
     for i,pname in enumerate(['sun', 'earth', 'jupiter']):
         plt.plot(r[0, :, i], r[1, :, i], label = pname)
     plt.legend()
     plt.axis([-5, 5, -5, 5])
     #plt.savefig("figures/nfsunjup.pdf")
-    nfd2 = pd.read_csv("data/nfm%.1fjupiter3_2.000_%.3f.txt"%(1, np.log10(nt)))
-    r,v = mdimarr(nfd2, nt, n)
-    plt.figure(3)
-    rnorm = np.sqrt(np.sum(r[:,:,1]**2, axis = 0))
-    t = np.linspace(0,1e9,nt)/(3600*24*365)
-    plt.plot(t, rnorm)
-    plt.xlabel("Years")
-    plt.ylabel(r"$|\mathbf{r}|$[AU]")
-    plt.title("Earth-sun distance")
-    plt.show()
 
     energy_data = pd.read_csv("data/energy_nfjupiter3_2.000_%.3f.txt"%np.log10(nt))
     t = energy_data["      timestep"]
@@ -175,9 +152,6 @@ def jupiterplots():
 
 
 def solarplots():
-    """
-    Plots things for the entire solar system
-    """
     nt = 80000
     n = 10
     data = pd.read_csv("data/solar%i_2.000_%.3f.txt"%(n, np.log10(nt)))
@@ -204,28 +178,10 @@ def solarplots():
     plt.legend()
     plt.show()
 
-def eulerverlplots():
-    """
-    Plots xy-plane plot of euler vs verlet.
-    """
-    nt = 1000
-    n = 2
-    dfe = pd.read_csv("data/euler2_2.000_3.000.txt")
-    dfv = pd.read_csv("data/verlet2_2.000_3.000.txt")
-    r1,v1 = mdimarr(dfe, nt, n)
-    r2,v2 = mdimarr(dfv, nt, n)
-    plt.figure()
-    plt.title("Earth-sun, Euler vs. Verlet")
-    plt.plot(r1[0, :, 1], r1[1, :, 1], label = "Euler")
-    plt.plot(r2[0, :, 1], r2[1, :, 1], label = "Verlet")
-    plt.xlabel("x[AU]")
-    plt.ylabel("y[AU]")
-    plt.legend()
-    plt.show()
 
 def mercury_precession():
     """
-    Plots mercury orbit and calculates precession
+    Plots mercury orbit and calculates precession?
     """
     nt = int(1e5)
     data = pd.read_csv("data/mercury2_2.000_%.3f.txt"%(np.log10(nt)))
@@ -279,6 +235,7 @@ def plot_3D():
 #betaplots()
 #mercury_precession()
 #plot_3D()
+#err_plots()
 
 if __name__ == "__main__":
     #call functions here as wanted
