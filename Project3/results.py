@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 plt.rcParams.update({'font.size': 14})
 
+
 def mdimarr(data, nt, n):
     x = data["x"]*units.m.to("au")
     y = data["y"]*units.m.to("au")
@@ -82,6 +83,7 @@ def betaplots():
     plt.xlabel(r"$x$ [AU]")
     plt.ylabel(r"$y$ [AU]")
     plt.legend()
+    plt.tight_layout()
     plt.savefig("figures/beta_circular.pdf")
 
 
