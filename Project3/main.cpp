@@ -18,8 +18,8 @@ int main(int argc, char *argv[]){
   solar_system earth_sun;
   Nt = 40000;
   T = 12e8;
-  double betas[5] = {2,2.001,2.01, 2.1, 2.2};
-  for (int i = 0; i<5; i++){
+  double betas[6] = {2,2.01,2.1, 2.2, 2.5, 3};
+  for (int i = 0; i<6; i++){
     earth_sun.initialize_earth_sun(Nt, T, betas[i], 0);
     earth_sun.F_G(0);
     for (int j = 0; j<Nt-1; j++){
