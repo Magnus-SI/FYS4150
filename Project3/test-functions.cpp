@@ -11,7 +11,7 @@ TEST_CASE("EulerVerlet"){
   int Nt;
   double beta = 2;
   double T = 3e8;   //about 10 years
-  int elliptical = 0;
+  double elliptical = 0;
 
   ofstream ofile;
   ofile.open("timeacc.csv");
@@ -69,7 +69,7 @@ TEST_CASE("Angular Momentum Conservation"){
   int Nt = 10000;
   double beta = 2;
   double T = 3e8;   //about 10 years
-  int elliptical = 1;
+  double elliptical = 1.2;
   solar_system earth_sun;
   earth_sun.initialize_earth_sun(Nt, T, beta, elliptical);
   earth_sun.F_G(0);

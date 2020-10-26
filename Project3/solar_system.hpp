@@ -20,7 +20,7 @@ protected:
 public:
   void initvars(int N, int Nt, double T, double beta, int fs);
   void initialize(int N, int Nt, double T, double beta, int fs);
-  void initialize_earth_sun(int Nt, double T, double beta, int elliptical);
+  void initialize_earth_sun(int Nt, double T, double beta, double elliptical);
   void initialize_mercury_sun(int Nt, double T, double beta);
   void set_jupiter_mass(int factor);
   void remove_drift();

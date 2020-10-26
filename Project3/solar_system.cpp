@@ -61,7 +61,7 @@ void solar_system::initialize(int N, int Nt, double T, double beta, int fs){
   fclose(fp_mass); //Close file with masses.
 }
 
-void solar_system::initialize_earth_sun(int Nt, double T, double beta, int elliptical){
+void solar_system::initialize_earth_sun(int Nt, double T, double beta, double elliptical){
   /*
   Initializes the case of only earth and sun which by the way
   has an analytic solution
@@ -86,9 +86,9 @@ void solar_system::initialize_earth_sun(int Nt, double T, double beta, int ellip
   //Set simple initial conditions for earth, earth is at 1 AU in x direction moving in y direction
   m_x[1] = 1.495979e+11; // [meter]
   m_vy[1] = pow(G*m_mass[0]/pow(m_x[1], m_beta-1), 0.5);    // [meter/second]
-  if (elliptical == 1){   //elliptical orbit
+  if (elliptical != 0){   //elliptical orbit
     //m_vy[1] = 5 * 1.495979e+11/(365*24*3600);
-    m_vy[1] *= 1.2;
+    m_vy[1] *= elliptical;
   }
 
 }
@@ -377,7 +377,7 @@ void solar_system::write_to_file(string filename)
   Stores the positions and velocities in a file
   */
   std::stringstream params;
-  params << std::fixed << m_N << "_"<< std::setprecision(2) << m_beta <<"_" <<log10(m_Nt);
+  params << std::fixed << m_N << "_"<< std::setprecision(3) << m_beta <<"_" <<log10(m_Nt);
   filename.append(params.str()).append(".txt");
 
   m_ofile.open(filename);

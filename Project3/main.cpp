@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
   //Then explore different values of beta with elliptical orbit
   solar_system elliptical_earth_sun;
   for (int i = 0; i<5; i++){
-    earth_sun.initialize_earth_sun(Nt, T, betas[i], 1);
+    earth_sun.initialize_earth_sun(Nt, T, betas[i], 1.2);
     earth_sun.F_G(0);
     for (int j = 0; j<Nt-1; j++){
       earth_sun.velocity_verlet(j);
@@ -40,7 +40,21 @@ int main(int argc, char *argv[]){
   }
 
   //Then explore different escape velocities with a fixed sun
-
+  solar_system esc_vels;
+  double escv[3] = {0.8, 1, 1.2};
+  string filename0;
+  for (int i = 0; i<3; i++){
+    esc_vels.initialize_earth_sun(Nt, T, betas[i], escv[i]);
+    esc_vels.F_G(0);
+    for (int j = 0; j<Nt-1; j++){
+      earth_sun.velocity_verlet(j);
+    }
+    filename0 = "data/";
+    std::stringstream params;
+    params << std::fixed <<std::setprecision(1) << "v" << escv[i];
+    filename0.append(params.str()).append("escvels");
+    earth_sun.write_to_file(filename0);
+  }
   //Then explore different jupiter masses with a fixed sun
   N = 3;
   Nt = 20000;
@@ -101,8 +115,8 @@ int main(int argc, char *argv[]){
 
   //Investigate mercury perihelion precession (fixed sun again)
   solar_system mercury;
-  T = 2*88*24*60*60;
-  Nt = 1000000;
+  T = 100*88*24*60*60;
+  Nt = 100000;
   //solar_solver.write_to_file(filename);
   mercury.initialize_mercury_sun(Nt, T, beta);
   mercury.remove_drift();

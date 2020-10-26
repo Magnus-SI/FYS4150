@@ -4,6 +4,8 @@ import pandas as pd
 from astropy import constants, units
 from mpl_toolkits.mplot3d import Axes3D
 
+plt.rcParams.update({'font.size': 14})
+
 def mdimarr(data, nt, n):
     x = data["x"]*units.m.to("au")
     y = data["y"]*units.m.to("au")
@@ -76,7 +78,10 @@ def betaplots():
     plt.show()
 
 def escvelplots():
-    pass
+    nt = int(4e4)
+    n = 2
+    vfacs = np.array([0.8, 1, 1.2])
+
 
 def jupiterplots():
     nt = 20000
@@ -154,11 +159,11 @@ def mercury_recession():
     Plots mercury orbit and calculates precession?
     """
     data = pd.read_csv("data/mercury2_2.00_6.00.txt")
-    nt = int(1e6)
+    nt = int(1e5)
     n = 2
     r, v = mdimarr(data, nt, n)
-    r1 = r[:,:nt//2,1]
-    r2 = r[:,nt//2:,1]
+    r1 = r[:,:nt//100,1]
+    r2 = r[:,99*nt//100:,1]
     plt.figure()
     plt.plot(0,0,"*")
     plt.plot(r1[0], r1[1])
