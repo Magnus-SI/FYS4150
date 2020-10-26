@@ -313,7 +313,7 @@ double* solar_system::conserved_quants(int m){
 
   cq[0] = KE / KEinit;
   cq[1] = PE / PEinit;
-  cq[2] = (KE + PE) / (KEinit + PEinit);
+  cq[2] = (PE - KE) / (PEinit - KEinit);
   cq[3] = r2/r2init;
 
   return cq;
