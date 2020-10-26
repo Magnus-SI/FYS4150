@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 
   //Then explore different escape velocities with a fixed sun
   solar_system esc_vels;
-  double escv[3] = {0.8, 1, 1.2};
+  double escv[3] = {1.5, 2, 2.5};
   string filename0;
   for (int i = 0; i<3; i++){
     esc_vels.initialize_earth_sun(Nt, T, betas[i], escv[i]);
