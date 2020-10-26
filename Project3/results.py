@@ -54,7 +54,7 @@ def err_plots():
     plt.savefig("figures/err_plots.pdf")
 
 def betaplots():
-    nt = int(1e6)
+    nt = int(1e5)
     n = 2
     betas = np.array([2, 2.01, 2.1, 2.2, 2.5])
     plt.figure()
