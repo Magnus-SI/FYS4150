@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 plt.rcParams.update({'font.size': 14})
 
+
 def mdimarr(data, nt, n):
     x = data["x"]*units.m.to("au")
     y = data["y"]*units.m.to("au")
@@ -27,7 +28,7 @@ def mdimarr(data, nt, n):
     return r, v
 
 def err_plots():
-    data = pd.read_csv("timeacc.csv")
+    data = pd.read_csv("data/timeacc.csv")
     logN = data["        log10N"]
     eultime = data["eultime"]
     vertime = data["vertime"]
@@ -83,43 +84,59 @@ def betaplots():
     plt.ylabel(r"$y$ [AU]")
     plt.legend()
     plt.tight_layout()
-    plt.savefig("figures/beta_circular.png")
+    plt.savefig("figures/beta_circular.pdf")
+
 
 def escvelplots():
     nt = int(4e4)
     n = 2
-    vfacs = np.array([0.8, 1, 1.2])
+    vfacs = np.sqrt(np.array([1.5, 2, 2.5]))
+    plt.figure()
+    for vf in vfacs:
+        data = pd.read_csv("data/v%.2fescvels2_%.3f_%.3f.txt"%(vf, 2, np.log10(nt)))
+        r,v = mdimarr(data, nt, n)
+        plt.plot(r[0,:,1], r[1,:,1], label = r"$v_{mult} = %.3f$"%vf)
+    plt.legend()
+    plt.axis("equal")
+    plt.xlabel(r"$x$ [AU]")
+    plt.ylabel(r"$y$ [AU]")
+    plt.show()
+    plt.figure()
 
 
 def jupiterplots():
     nt = 20000
     n = 3
-    massms = np.array([1, 1000])
+    massms = np.array([1,10, 1000])
 
-    for i, title in enumerate(["Fixed sun", "Non-fixed sun"]):
+    for i, title in enumerate(["Fixed sun", r"Non-fixed sun. $M_J * 1000$"]):
         plt.figure(i)
-        plt.axis([-10, 10, -10, 10])
         plt.gca().set_aspect("equal", adjustable = 'box')
         plt.title(title)
+        plt.xlabel("x[AU]")
+        plt.ylabel("y[AU]")
 
-    for m, lstyle in zip(massms, ["-", "dotted"]):
-        fdata =  pd.read_csv("data/m%.1fjupiter3_2.000_4.300.txt"%m)
-        nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.000_4.300.txt"%m)
-        r1,v1 = mdimarr(fdata, nt, n)
-        r2,v2 = mdimarr(nfdata, nt, n)
-        for i, pname, c in zip(range(0,3), ["sun", "earth", "jupiter"], ["red", "blue", "orange"]):
-            plt.figure(0)
-            plt.plot(r1[0, :, i], r1[1, :, i], linestyle = lstyle,
-                     label = "%s, multiplier %i"%(pname,m), color = c)
-            plt.figure(1)
-            plt.plot(r2[0, :, i], r2[1, :, i], linestyle = lstyle,
-                     label = "%s, multiplier %i"%(pname,m), color = c)
+    plt.figure(0)
+    for i in range(3):
+        fdata = pd.read_csv("data/m%.1fjupiter3_2.000_%.3f.txt"%(massms[i], np.log10(nt)))
+        r,v = mdimarr(fdata, nt, n)
+        plt.plot(r[0, :, 1], r[1, :, 1],
+                 label = "%s, multiplier %i"%("earth",massms[i]))
+    plt.plot(r[0, :, 2], r[1, :, 2], label = "Jupiter")
+    plt.legend()
+    plt.axis([-10, 10, -10, 10])
+    #plt.savefig("figures/fsunjup.pdf")
 
-        plt.legend()
-        plt.figure(0)
-        plt.legend()
+    plt.figure(1)
+    nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.000_%.3f.txt"%(1000, np.log10(nt)))
+    r,v = mdimarr(nfdata, nt, n)
+    for i,pname in enumerate(['sun', 'earth', 'jupiter']):
+        plt.plot(r[0, :, i], r[1, :, i], label = pname)
+    plt.legend()
+    plt.axis([-5, 5, -5, 5])
+    #plt.savefig("figures/nfsunjup.pdf")
 
-    energy_data = pd.read_csv("data/energy_nfjupiter3_2.000_4.300.txt")
+    energy_data = pd.read_csv("data/energy_nfjupiter3_2.000_%.3f.txt"%np.log10(nt))
     t = energy_data["      timestep"]
     PE = energy_data["PE"]
     KE = energy_data["KE"]

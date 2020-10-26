@@ -14,7 +14,7 @@ TEST_CASE("EulerVerlet"){
   double elliptical = 0;
 
   ofstream ofile;
-  ofile.open("timeacc.csv");
+  ofile.open("data/timeacc.csv");
   ofile <<setw(15) << setprecision(8);
   ofile << "log10N," << "eultime," << "vertime," << "eulerr," << "vererr" <<endl;
   solar_system verlet_solver;
@@ -24,10 +24,8 @@ TEST_CASE("EulerVerlet"){
   for (int i = 3; i<7; i++){
     Nt = pow(10, i);
     verlet_solver.initialize_earth_sun(Nt, T, beta, elliptical);
-    //verlet_solver.remove_drift();
     verlet_solver.F_G(0);
     euler_solver.initialize_earth_sun(Nt, T, beta, elliptical);
-    //euler_solver.remove_drift();
     euler_solver.F_G(0);
 
     time1 = clock();
@@ -107,5 +105,30 @@ TEST_CASE("All_Planet_Energy"){
 
     }
   }
+}
 
+TEST_CASE("Beta conservation"){
+  int Nt = 20000;
+  double T = 1e9;
+  double beta = 3;
+  solar_system earth_sun;
+  earth_sun.initialize_earth_sun(Nt, T, beta, 1.2);
+  earth_sun.F_G(0);
+
+  double dA;
+  double dA0 = earth_sun.Kep2Area(0, 1);
+  double totE;
+  double* E0 = earth_sun.total_energy(0);
+  double totE0 = E0[0] - E0[1];
+
+  for (int i = 0; i<Nt-1; i++){
+    earth_sun.velocity_verlet(i);
+    if(remainder(i,100) == 0){
+      double* E = earth_sun.total_energy(i);
+      totE = E[0] - E[1];
+      REQUIRE(totE/totE0 == Approx(1).epsilon(1e-3));
+      dA = earth_sun.Kep2Area(i, 1);
+      REQUIRE(dA/dA0 == Approx(1).epsilon(1e-2));
+    }
+  }
 }

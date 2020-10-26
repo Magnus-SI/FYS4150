@@ -313,7 +313,7 @@ double* solar_system::conserved_quants(int m){
 
   cq[0] = KE / KEinit;
   cq[1] = PE / PEinit;
-  cq[2] = (KE + PE) / (KEinit + PEinit);
+  cq[2] = (PE - KE) / (PEinit - KEinit);
   cq[3] = r2/r2init;
 
   return cq;
@@ -394,7 +394,7 @@ void solar_system::save_energies(string filename){
   Stores the potential and kinetic energy of the system at certain timesteps
   */
   std::stringstream params;
-  params << std::fixed << m_N << "_"<< std::setprecision(2) << m_beta <<"_" <<log10(m_Nt);
+  params << std::fixed << m_N << "_"<< std::setprecision(3) << m_beta <<"_" <<log10(m_Nt);
   string instring = "data/energy_";
   instring.append(filename).append(params.str()).append(".txt");
 
