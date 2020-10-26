@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 
   //First explore different values of beta with a fixed sun
   solar_system earth_sun;
-  Nt = 10000;
+  Nt = 100000;
   T = 12e9;
   double betas[6] = {2,2.01,2.1, 2.2, 2.5, 3};
   for (int i = 0; i<6; i++){
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]){
   //Investigate mercury perihelion precession (fixed sun again)
   solar_system mercury;
   T = 100*88*24*60*60;
-  Nt = 100000;
+  Nt = 10000000;
   //solar_solver.write_to_file(filename);
   mercury.initialize_mercury_sun(Nt, T, beta);
   mercury.remove_drift();
