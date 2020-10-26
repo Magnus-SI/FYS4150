@@ -84,10 +84,22 @@ def betaplots():
     plt.legend()
     plt.savefig("figures/beta_circular.pdf")
 
+
 def escvelplots():
     nt = int(4e4)
     n = 2
-    vfacs = np.array([0.8, 1, 1.2])
+    vfacs = np.sqrt(np.array([1.5, 2, 2.5]))
+    plt.figure()
+    for vf in vfacs:
+        data = pd.read_csv("data/v%.2fescvels2_%.3f_%.3f.txt"%(vf, 2, np.log10(nt)))
+        r,v = mdimarr(data, nt, n)
+        plt.plot(r[0,:,1], r[1,:,1], label = r"$v_{mult} = %.3f$"%vf)
+    plt.legend()
+    plt.axis("equal")
+    plt.xlabel(r"$x$ [AU]")
+    plt.ylabel(r"$y$ [AU]")
+    plt.show()
+    plt.figure()
 
 
 def jupiterplots():
