@@ -53,29 +53,36 @@ def err_plots():
     plt.savefig("figures/err_plots.pdf")
 
 def betaplots():
-    nt = int(4e4)
+    nt = int(1e6)
     n = 2
-    betas = np.array([2, 2.001, 2.01, 2.1, 2.2])
+    betas = np.array([2, 2.01, 2.1, 2.2, 2.5])
     plt.figure()
-    for beta in betas:
-        data = pd.read_csv("data/elliptical_earth_sun2_%.2f_4.60.txt"%beta)
+    for i,beta in enumerate(betas):
+        data = pd.read_csv("data/elliptical_earth_sun2_%.3f_%.3f.txt"%(beta, np.log10(nt)))
         r,v = mdimarr(data, nt, n)
-        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.3f$"%beta)
+        if i == 0:
+            plt.plot(r[0,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], r[1,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], label = r"$\beta = %.3f$"%beta\
+                , color ='k', linewidth=4)
+        else:
+            plt.plot(r[0,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], r[1,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], label = r"$\beta = %.3f$"%beta\
+                , alpha = 0.7)
     plt.legend()
     plt.axis("equal")
     plt.xlabel(r"$x$ [AU]")
     plt.ylabel(r"$y$ [AU]")
-    plt.show()
+    plt.tight_layout()
+    plt.savefig("figures/beta_elliptical.pdf")
     plt.figure()
-    for beta in betas:
-        data = pd.read_csv("data/earth_sun2_%.2f_4.60.txt"%beta)
+    betas = np.array([2, 2.1, 2.5, 3])
+    for i,beta in enumerate(betas):
+        data = pd.read_csv("data/earth_sun2_%.3f_%.3f.txt"%(beta, np.log10(nt)))
         r,v = mdimarr(data, nt, n)
-        plt.plot(r[0,:,1], r[1,:,1], label = r"$\beta = %.3f$"%beta)
+        plt.plot(r[0,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], r[1,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], label = r"$\beta = %.3f$"%beta)
     plt.axis("equal")
     plt.xlabel(r"$x$ [AU]")
     plt.ylabel(r"$y$ [AU]")
     plt.legend()
-    plt.show()
+    plt.savefig("figures/beta_circular.pdf")
 
 def escvelplots():
     nt = int(4e4)
@@ -95,8 +102,8 @@ def jupiterplots():
         plt.title(title)
 
     for m, lstyle in zip(massms, ["-", "dotted"]):
-        fdata =  pd.read_csv("data/m%.1fjupiter3_2.00_4.30.txt"%m)
-        nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.00_4.30.txt"%m)
+        fdata =  pd.read_csv("data/m%.1fjupiter3_2.000_4.300.txt"%m)
+        nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.000_4.300.txt"%m)
         r1,v1 = mdimarr(fdata, nt, n)
         r2,v2 = mdimarr(nfdata, nt, n)
         for i, pname, c in zip(range(0,3), ["sun", "earth", "jupiter"], ["red", "blue", "orange"]):
@@ -111,7 +118,7 @@ def jupiterplots():
         plt.figure(0)
         plt.legend()
 
-    energy_data = pd.read_csv("data/energy_nfjupiter3_2.00_4.30.txt")
+    energy_data = pd.read_csv("data/energy_nfjupiter3_2.000_4.300.txt")
     t = energy_data["      timestep"]
     PE = energy_data["PE"]
     KE = energy_data["KE"]
@@ -129,7 +136,7 @@ def jupiterplots():
 def solarplots():
     nt = 80000
     n = 10
-    data = pd.read_csv("data/solar%i_2.00_%.2f.txt"%(n, np.log10(nt)))
+    data = pd.read_csv("data/solar%i_2.000_%.3f.txt"%(n, np.log10(nt)))
     r,v = mdimarr(data, nt, n)
     plt.figure()
     plt.title("Solar System on xy-plane")
@@ -139,7 +146,7 @@ def solarplots():
     plt.gca().set_aspect("equal", adjustable = 'box')
     plt.show()
 
-    energy_data = pd.read_csv("data/energy_solar%i_2.00_%.2f.txt"%(n, np.log10(nt)))
+    energy_data = pd.read_csv("data/energy_solar%i_2.000_%.3f.txt"%(n, np.log10(nt)))
     t = energy_data["      timestep"]
     PE = energy_data["PE"]
     KE = energy_data["KE"]
@@ -158,7 +165,7 @@ def mercury_recession():
     """
     Plots mercury orbit and calculates precession?
     """
-    data = pd.read_csv("data/mercury2_2.00_6.00.txt")
+    data = pd.read_csv("data/mercury2_2.000_5.000.txt")
     nt = int(1e5)
     n = 2
     r, v = mdimarr(data, nt, n)
@@ -186,7 +193,7 @@ def mercury_recession():
     print("Precession angle: %.2f\"" %theta_p)
 
 #betaplots()
-mercury_recession()
+#mercury_recession()
 
 if __name__ == "__main__":
     #call functions here as wanted
