@@ -345,6 +345,41 @@ double solar_system::Kep2Area(int m, int planet_ind){
 
 }
 
+double* solar_system::total_energy(int m){
+  /*
+  Returns the total energy of the system at the current timestep
+  */
+  m*= m_N;
+  double r2_sun;
+  double r2_jup;
+  double v2;
+  double *tot_E;
+  tot_E = new double[4];
+  double PE;
+  double KE;
+  //Loop over every object
+  for(int i=0; i<m_N; i++){
+    if (i!=0 && i!=2){
+      r2_sun = pow(m_x[m + i] - m_x[m], 2) + pow(m_y[m + i] - m_y[m], 2) +
+                  pow(m_z[m + i] - m_z[m], 2);
+      r2_jup = pow(m_x[m + i] - m_x[m+2], 2) + pow(m_y[m + i] - m_y[m+2], 2) +
+                  pow(m_z[m + i] - m_z[m+2], 2);
+      PE += G * m_mass[0] * m_mass[i] / r2_sun;
+      PE += G * m_mass[2] * m_mass[i] /r2_jup;
+    }
+    double r2js = pow(m_x[m + 2] - m_x[m], 2) + pow(m_y[m + 2] - m_y[m], 2) +
+                pow(m_z[m + 2] - m_z[m], 2);
+    PE += G * m_mass[0] * m_mass[2] / r2js;
+
+    v2 = pow(m_vx[m + i], 2) + pow(m_vy[m + i], 2) + pow(m_vz[m + i], 2);
+    KE += 0.5 * m_mass[i] * v2;
+  }
+  tot_E[0] = PE;
+  tot_E[1] = KE;
+
+  return tot_E;
+}
+
 void solar_system::write_to_file(string filename)
 {
   /*

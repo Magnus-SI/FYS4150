@@ -64,6 +64,24 @@ int main(int argc, char *argv[]){
     jupiter.write_to_file(filename);
   }
 
+  //Different jupiter masses without a fixed sun
+  string filename2;
+  for (int i = 0; i<3; i++){
+    jupiter.initialize(N, Nt, T, beta, 0);
+    jupiter.set_jupiter_mass(massfactors[i]);
+    jupiter.remove_drift();
+    jupiter.F_G(0);
+    for(int l=0; l<Nt-1; l++){
+      jupiter.velocity_verlet(l);
+    }
+    filename2 = "data/nf";
+    std::stringstream params;
+    params << std::fixed <<std::setprecision(1) << "m" << massfactors[i];
+    filename2.append(params.str()).append("jupiter");
+    jupiter.write_to_file(filename2);
+  }
+
+
   //No longer a fixed sun with all planets in the solar system.
 
   N = 10;

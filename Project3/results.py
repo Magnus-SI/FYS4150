@@ -51,15 +51,25 @@ def jupiterplots():
     nt = 20000
     n = 3
     massms = np.array([1, 10, 1000])
-    plt.figure()
-    for m in massms:
-        data = pd.read_csv("data/m%.1fjupiter3_2.00_4.30.txt"%m)
-        r,v = mdimarr(data, nt, n)
-        for i in range(1,3):
-            plt.plot(r[0, :, i], r[1, :, i], label = "planet %i, mm = %i"%(i, m))
-    plt.legend()
-    plt.show()
 
+    for i, title in enumerate(["Fixed sun", "Non-fixed sun"]):
+        plt.figure(i)
+        plt.axis([-10, 10, -10, 10])
+        plt.gca().set_aspect("equal", adjustable = 'box')
+        plt.title(title)
+
+    for m, lstyle in zip(massms, ['-', 'dashed', 'dotted']):
+        fdata =  pd.read_csv("data/m%.1fjupiter3_2.00_4.30.txt"%m)
+        nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.00_4.30.txt"%m)
+        r1,v1 = mdimarr(fdata, nt, n)
+        r2,v2 = mdimarr(nfdata, nt, n)
+        for i, pname, c in zip(range(0,3), ["sun", "earth", "jupiter"], ["red", "blue", "orange"]):
+            plt.figure(0)
+            plt.plot(r1[0, :, i], r1[1, :, i], linestyle = lstyle,
+                     label = "%s, multiplier %i"%(pname,m), color = c)
+            plt.figure(1)
+            plt.plot(r2[0, :, i], r2[1, :, i], linestyle = lstyle,
+                     label = "%s, multiplier %i"%(pname,m), color = c)
 
 def solarplots():
     nt = 20000
@@ -71,6 +81,18 @@ def solarplots():
         plt.plot(r[0, :, i], r[1, :, i], label = "planet %i"%i)
     plt.legend()
     plt.show()
+
+    energy_data = pd.read_csv("tot_en.csv")
+    t = energy_data["      timestep"]
+    PE = energy_data["PE"]
+    KE = energy_data["KE"]
+    plt.figure()
+    plt.plot(t, PE, label = "PE")
+    plt.plot(t, KE, label = "KE")
+    plt.yscale("log")
+    plt.legend()
+    plt.show()
+
 
 def mercury_recession():
     """
