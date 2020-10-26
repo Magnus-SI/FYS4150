@@ -77,12 +77,13 @@ def betaplots():
     for i,beta in enumerate(betas):
         data = pd.read_csv("data/earth_sun2_%.3f_%.3f.txt"%(beta, np.log10(nt)))
         r,v = mdimarr(data, nt, n)
-        plt.plot(r[0,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], r[1,:int(((i+1)/6)**4*nt),1][::int(((i+1)/6)**2*100)], label = r"$\beta = %.3f$"%beta)
+        plt.plot(r[0,:,1][::int(((i+1)/6)**2*100)], r[1,:,1][::int(((i+1)/6)**2*100)] + 0.1*i, label = r"$\beta = %.3f$"%beta)
     plt.axis("equal")
     plt.xlabel(r"$x$ [AU]")
     plt.ylabel(r"$y$ [AU]")
     plt.legend()
-    plt.savefig("figures/beta_circular.pdf")
+    plt.tight_layout()
+    plt.savefig("figures/beta_circular.png")
 
 def escvelplots():
     nt = int(4e4)
@@ -161,39 +162,62 @@ def solarplots():
     plt.show()
 
 
-def mercury_recession():
+def mercury_precession():
     """
     Plots mercury orbit and calculates precession?
     """
-    data = pd.read_csv("data/mercury2_2.000_5.000.txt")
-    nt = int(1e5)
+    nt = int(1e7)
+    data = pd.read_csv("data/mercury_classical2_2.000_%.3f.txt"%(np.log10(nt)))
     n = 2
     r, v = mdimarr(data, nt, n)
     r1 = r[:,:nt//100,1]
     r2 = r[:,99*nt//100:,1]
     plt.figure()
-    plt.plot(0,0,"*")
-    plt.plot(r1[0], r1[1])
-    plt.plot(r2[0], r2[1])
-    plt.axis("equal")
+    plt.plot(0,0,".", color='orange', label='The Sun')
+    plt.plot(r1[0], r1[1], ls ='-', color='k', label="1st year")
+    plt.plot(r2[0], r2[1], ls ='dotted', color='lime', label="100th year")
     r_min1 = np.argmin(r1[0]**2 + r1[1]**2)
     x_p1 = r1[0, r_min1]
     y_p1 = r1[1, r_min1]
     r_min2 = np.argmin(r2[0]**2 + r2[1]**2)
-    x_p2 = r1[0, r_min2]
-    y_p2 = r1[1, r_min2]
-    plt.plot(x_p1, y_p1, 'x')
-    plt.plot(x_p2, y_p2, 'x')
+    x_p2 = r2[0, r_min2]
+    y_p2 = r2[1, r_min2]
+    plt.plot(x_p1, y_p1, 'x', color='k', label="1st perihelion")
+    plt.plot(x_p2, y_p2, '.', color='lime', label="100th perihelion")
+    plt.xlabel(r"$x$ [AU]")
+    plt.ylabel(r"$y$ [AU]")
+    plt.legend(loc="lower left")
+    plt.tight_layout()
+    plt.axis("equal")
+    plt.savefig("figures/mercury_classical.pdf")
     plt.show()
     theta1 = np.arctan(y_p1/x_p1)
     theta2 = np.arctan(y_p2/x_p2)
 
-    theta_p = (theta1 - theta2)*206265
+    theta_p = (theta2 - theta1)*206265
 
     print("Precession angle: %.2f\"" %theta_p)
 
+def plot_3D():
+    n = 10
+    nt = 80000
+    data = pd.read_csv("data/solar10_2.000_4.903.txt")
+    r,v = mdimarr(data, nt, n)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    for j in range(n):
+        ax.plot(r[0,:,j],r[1,:,j],r[2,:,j])
+
+    ax.set_xlabel(r"$x$ [AU]")
+    ax.set_ylabel(r"$y$ [AU]")
+    ax.set_zlabel(r"$z$ [AU]")
+    ax.set_zlim(-20,20)
+    ax.set_zticks([-10,0,10])
+    fig.savefig("figures/solar_system_3D.pdf")
+
 #betaplots()
-#mercury_recession()
+#mercury_precession()
+plot_3D()
 
 if __name__ == "__main__":
     #call functions here as wanted
