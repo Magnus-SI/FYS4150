@@ -34,5 +34,6 @@ public:
   double* total_energy(int m);
   double* conserved_quants(int m);
   void write_to_file(string filename);
+  void save_energies(string filename);
 };
 #endif

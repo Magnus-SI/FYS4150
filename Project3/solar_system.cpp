@@ -85,7 +85,7 @@ void solar_system::initialize_earth_sun(int Nt, double T, double beta, int ellip
   fclose(fp_mass); //Close file with masses.
   //Set simple initial conditions for earth, earth is at 1 AU in x direction moving in y direction
   m_x[1] = 1.495979e+11; // [meter]
-  m_vy[1] = pow(6.67e-11*m_mass[0]/pow(m_x[1], m_beta-1), 0.5);    // [meter/second]
+  m_vy[1] = pow(G*m_mass[0]/pow(m_x[1], m_beta-1), 0.5);    // [meter/second]
   if (elliptical == 1){   //elliptical orbit
     //m_vy[1] = 5 * 1.495979e+11/(365*24*3600);
     m_vy[1] *= 1.2;
@@ -350,8 +350,7 @@ double* solar_system::total_energy(int m){
   Returns the total energy of the system at the current timestep
   */
   m*= m_N;
-  double r2_sun;
-  double r2_jup;
+  double r2;
   double v2;
   double *tot_E;
   tot_E = new double[4];
@@ -359,17 +358,11 @@ double* solar_system::total_energy(int m){
   double KE;
   //Loop over every object
   for(int i=0; i<m_N; i++){
-    if (i!=0 && i!=2){
-      r2_sun = pow(m_x[m + i] - m_x[m], 2) + pow(m_y[m + i] - m_y[m], 2) +
+    if (i!=0){
+      r2 = pow(m_x[m + i] - m_x[m], 2) + pow(m_y[m + i] - m_y[m], 2) +
                   pow(m_z[m + i] - m_z[m], 2);
-      r2_jup = pow(m_x[m + i] - m_x[m+2], 2) + pow(m_y[m + i] - m_y[m+2], 2) +
-                  pow(m_z[m + i] - m_z[m+2], 2);
-      PE += G * m_mass[0] * m_mass[i] / r2_sun;
-      PE += G * m_mass[2] * m_mass[i] /r2_jup;
+      PE += G * m_mass[0] * m_mass[i] / pow(r2, 0.5);
     }
-    double r2js = pow(m_x[m + 2] - m_x[m], 2) + pow(m_y[m + 2] - m_y[m], 2) +
-                pow(m_z[m + 2] - m_z[m], 2);
-    PE += G * m_mass[0] * m_mass[2] / r2js;
 
     v2 = pow(m_vx[m + i], 2) + pow(m_vy[m + i], 2) + pow(m_vz[m + i], 2);
     KE += 0.5 * m_mass[i] * v2;
@@ -396,4 +389,33 @@ void solar_system::write_to_file(string filename)
     << m_vy[i] << "," << m_vz[i] << endl;
     }
   m_ofile.close();
+}
+
+void solar_system::save_energies(string filename){
+  /*
+  Stores the potential and kinetic energy of the system at certain timesteps
+  */
+  std::stringstream params;
+  params << std::fixed << m_N << "_"<< std::setprecision(2) << m_beta <<"_" <<log10(m_Nt);
+  string instring = "data/energy_";
+  instring.append(filename).append(params.str()).append(".txt");
+
+  double* E0 = total_energy(0);
+  double PE0 = E0[0];
+  double KE0 = E0[1];
+
+  ofstream ofile;
+  ofile.open(instring);
+  ofile <<setw(15) << setprecision(8);
+  ofile << "timestep," << "PE," << "KE" <<endl;
+  for (int i = 0; i<m_Nt-1; i++){
+    if(remainder(i,100) == 0){
+      double* E = total_energy(i);
+      //totE = E[0] + E[1];
+      //REQUIRE(totE/totE0 == Approx(1).epsilon(1e-2));
+      ofile << i << "," << E[0] << "," << E[1] <<endl;
+
+    }
+  }
+
 }

@@ -75,24 +75,44 @@ def jupiterplots():
         plt.figure(0)
         plt.legend()
 
+    energy_data = pd.read_csv("data/energy_nfjupiter3_2.00_4.30.txt")
+    t = energy_data["      timestep"]
+    PE = energy_data["PE"]
+    KE = energy_data["KE"]
+    plt.figure(2)
+    plt.title("Total energies with high mass Jupiter, non-fixed sun")
+    plt.plot(t, PE, label = r"$E_P$")
+    plt.plot(t, KE, label = r"$E_K$")
+    plt.plot(t, PE-KE, label = r"$E_P - E_K$")
+    plt.xlabel("timestep")
+    plt.yscale("log")
+    plt.legend()
+    plt.show()
+
+
 def solarplots():
-    nt = 20000
+    nt = 80000
     n = 10
     data = pd.read_csv("data/solar%i_2.00_%.2f.txt"%(n, np.log10(nt)))
     r,v = mdimarr(data, nt, n)
     plt.figure()
+    plt.title("Solar System on xy-plane")
     for i in range(n):
         plt.plot(r[0, :, i], r[1, :, i], label = "planet %i"%i)
-    plt.legend()
+    #plt.legend()
+    plt.gca().set_aspect("equal", adjustable = 'box')
     plt.show()
 
-    energy_data = pd.read_csv("tot_en.csv")
+    energy_data = pd.read_csv("data/energy_solar%i_2.00_%.2f.txt"%(n, np.log10(nt)))
     t = energy_data["      timestep"]
     PE = energy_data["PE"]
     KE = energy_data["KE"]
     plt.figure()
-    plt.plot(t, PE, label = "PE")
-    plt.plot(t, KE, label = "KE")
+    plt.title("Total Energy for all planets")
+    plt.plot(t, PE, label = r"$E_P$")
+    plt.plot(t, KE, label = r"$E_K$")
+    plt.plot(t, PE-KE, label = r"$E_P - E_K$")
+    plt.xlabel("timestep")
     plt.yscale("log")
     plt.legend()
     plt.show()

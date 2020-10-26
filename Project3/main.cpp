@@ -62,6 +62,7 @@ int main(int argc, char *argv[]){
     params << std::fixed <<std::setprecision(1) << "m" << massfactors[i];
     filename.append(params.str()).append("jupiter");
     jupiter.write_to_file(filename);
+  jupiter.save_energies("jupiter");   //only saves the most extreme case
   }
 
   //Different jupiter masses without a fixed sun
@@ -79,12 +80,15 @@ int main(int argc, char *argv[]){
     params << std::fixed <<std::setprecision(1) << "m" << massfactors[i];
     filename2.append(params.str()).append("jupiter");
     jupiter.write_to_file(filename2);
+  jupiter.save_energies("nfjupiter");    //only saves the most extreme case
   }
 
 
   //No longer a fixed sun with all planets in the solar system.
 
   N = 10;
+  Nt = 80000;
+  T = 1e10;
   solar_system solar_solver;
   solar_solver.initialize(N, Nt, T, beta, 0);
   solar_solver.remove_drift();
@@ -93,6 +97,7 @@ int main(int argc, char *argv[]){
     solar_solver.velocity_verlet(l);
   }
   solar_solver.write_to_file("data/solar");
+  solar_solver.save_energies("solar");
 
   //Investigate mercury perihelion precession (fixed sun again)
   solar_system mercury;
