@@ -14,7 +14,7 @@ TEST_CASE("EulerVerlet"){
   double elliptical = 0;
 
   ofstream ofile;
-  ofile.open("timeacc.csv");
+  ofile.open("data/timeacc.csv");
   ofile <<setw(15) << setprecision(8);
   ofile << "log10N," << "eultime," << "vertime," << "eulerr," << "vererr" <<endl;
   solar_system verlet_solver;
@@ -24,10 +24,8 @@ TEST_CASE("EulerVerlet"){
   for (int i = 3; i<7; i++){
     Nt = pow(10, i);
     verlet_solver.initialize_earth_sun(Nt, T, beta, elliptical);
-    //verlet_solver.remove_drift();
     verlet_solver.F_G(0);
     euler_solver.initialize_earth_sun(Nt, T, beta, elliptical);
-    //euler_solver.remove_drift();
     euler_solver.F_G(0);
 
     time1 = clock();

@@ -394,7 +394,7 @@ void solar_system::save_energies(string filename){
   Stores the potential and kinetic energy of the system at certain timesteps
   */
   std::stringstream params;
-  params << std::fixed << m_N << "_"<< std::setprecision(2) << m_beta <<"_" <<log10(m_Nt);
+  params << std::fixed << m_N << "_"<< std::setprecision(3) << m_beta <<"_" <<log10(m_Nt);
   string instring = "data/energy_";
   instring.append(filename).append(params.str()).append(".txt");
 
