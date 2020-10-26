@@ -9,3 +9,5 @@ To run simulation, run the makefile
 then analyse data in results.py. In this script simply call functions of what you want to plot, then
 
 > python3 results.py
+
+To increase resolution of the different system, you have to change main.cpp. This is done by changing the variable Nt
