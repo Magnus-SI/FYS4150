@@ -70,10 +70,17 @@ TEST_CASE("Angular Momentum Conservation"){
   double beta = 2;
   double T = 3e8;   //about 10 years
   int elliptical = 1;
-  solar_system earth_sun
+  solar_system earth_sun;
   earth_sun.initialize_earth_sun(Nt, T, beta, elliptical);
   earth_sun.F_G(0);
-  for(int m=0; m<Nt-1; m++){
-    earth_sun.velocity_verlet(m);
+  double dA;
+  double dA0 = earth_sun.Kep2Area(0, 1);
+  for (int i = 0; i<Nt-1; i++){
+    earth_sun.velocity_verlet(i);
+    if(remainder(i,100) == 0){
+      dA = earth_sun.Kep2Area(i, 1);
+      REQUIRE(dA/dA0 == Approx(1).epsilon(1e-2));
+    }
   }
+
 }

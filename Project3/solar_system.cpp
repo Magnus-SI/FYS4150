@@ -338,9 +338,9 @@ double solar_system::Kep2Area(int m, int planet_ind){
   double dotprod =  m_x[m + planet_ind] * m_vx[m + planet_ind] +
                     m_y[m + planet_ind] * m_vy[m + planet_ind] +
                     m_z[m + planet_ind] * m_vz[m + planet_ind];
-  double coshteta = dotprod/(pow(r2*v2, 0.5));
+  double costheta = dotprod/(pow(r2*v2, 0.5));
   double vtheta = pow(1-pow(costheta, 2), 0.5) * pow(v2, 0.5);
-  return 0.5 * pow(r2, 0.5) * svtheta;
+  return 0.5 * pow(r2, 0.5) * vtheta;
 
 
 }
