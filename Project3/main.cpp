@@ -16,8 +16,8 @@ int main(int argc, char *argv[]){
 
   //First explore different values of beta with a fixed sun
   solar_system earth_sun;
-  Nt = 40000;
-  T = 12e8;
+  Nt = 100000;
+  T = 12e9;
   double betas[6] = {2,2.01,2.1, 2.2, 2.5, 3};
   for (int i = 0; i<6; i++){
     earth_sun.initialize_earth_sun(Nt, T, betas[i], 0);
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 
   //Then explore different values of beta with elliptical orbit
   solar_system elliptical_earth_sun;
-  for (int i = 0; i<5; i++){
+  for (int i = 0; i<6; i++){
     earth_sun.initialize_earth_sun(Nt, T, betas[i], 1.2);
     earth_sun.F_G(0);
     for (int j = 0; j<Nt-1; j++){
@@ -41,19 +41,20 @@ int main(int argc, char *argv[]){
 
   //Then explore different escape velocities with a fixed sun
   solar_system esc_vels;
-  double escv[3] = {1.5, 2, 2.5};
+  double escv[3] = {pow(1.5, 0.5), pow(2, 0.5), pow(2.5, 0.5)};
   string filename0;
+  beta = 2;
   for (int i = 0; i<3; i++){
-    esc_vels.initialize_earth_sun(Nt, T, betas[i], escv[i]);
+    esc_vels.initialize_earth_sun(Nt, T, beta, escv[i]);
     esc_vels.F_G(0);
     for (int j = 0; j<Nt-1; j++){
-      earth_sun.velocity_verlet(j);
+      esc_vels.velocity_verlet(j);
     }
     filename0 = "data/";
     std::stringstream params;
-    params << std::fixed <<std::setprecision(1) << "v" << escv[i];
+    params << std::fixed <<std::setprecision(2) << "v" << escv[i];
     filename0.append(params.str()).append("escvels");
-    earth_sun.write_to_file(filename0);
+    esc_vels.write_to_file(filename0);
   }
   //Then explore different jupiter masses with a fixed sun
   N = 3;
