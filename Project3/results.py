@@ -50,7 +50,7 @@ def escvelplots():
 def jupiterplots():
     nt = 20000
     n = 3
-    massms = np.array([1, 10, 1000])
+    massms = np.array([1, 1000])
 
     for i, title in enumerate(["Fixed sun", "Non-fixed sun"]):
         plt.figure(i)
@@ -58,7 +58,7 @@ def jupiterplots():
         plt.gca().set_aspect("equal", adjustable = 'box')
         plt.title(title)
 
-    for m, lstyle in zip(massms, ['-', 'dashed', 'dotted']):
+    for m, lstyle in zip(massms, ["-", "dotted"]):
         fdata =  pd.read_csv("data/m%.1fjupiter3_2.00_4.30.txt"%m)
         nfdata = pd.read_csv("data/nfm%.1fjupiter3_2.00_4.30.txt"%m)
         r1,v1 = mdimarr(fdata, nt, n)
@@ -70,6 +70,10 @@ def jupiterplots():
             plt.figure(1)
             plt.plot(r2[0, :, i], r2[1, :, i], linestyle = lstyle,
                      label = "%s, multiplier %i"%(pname,m), color = c)
+
+        plt.legend()
+        plt.figure(0)
+        plt.legend()
 
 def solarplots():
     nt = 20000
