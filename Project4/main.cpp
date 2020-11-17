@@ -8,7 +8,7 @@
 
 int main(){
   ising2D my_ising;
-  int L = 5; double temp = 1.0; double tol = 0.0;
+  int L = 2; double temp = 1.0; double tol = 0.0;
   my_ising.initialize(L, temp, tol);
   for(int mcs=1; mcs<1001; mcs++){
     my_ising.metropolis();

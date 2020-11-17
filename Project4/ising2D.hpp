@@ -8,7 +8,7 @@ class ising2D {
 
 protected:
   int m_L, m_T;
-  double m_E, m_M, C_v, m_chi;
+  double m_deltaE, m_deltaM, C_v, m_chi;
   int *m_spin;
   double *m_w;
   int periodic(int i);

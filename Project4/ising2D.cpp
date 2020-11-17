@@ -30,7 +30,7 @@ void ising2D::initialize(int L, double temp, double tol){
   */
   m_T = temp; //dimensionless temperature
   m_L = L;
-  m_E = 0; m_M = 0;
+  m_deltaE = 0; m_deltaM = 0;
   m_spin = new int[m_L*m_L];
   m_w = new double[17];
   m_mean = new double[5];
@@ -43,18 +43,14 @@ void ising2D::initialize(int L, double temp, double tol){
   for(int i=0; i<m_L*m_L; i++){
     m_spin[i] = 1;
     if(rand()/RAND_MAX < tol) m_spin[i] = -1;
-    m_M += m_spin[i];
+    m_deltaM += m_spin[i];
   }
   //Finding energy
   for(int j=0; j<m_L*m_L; j++){
-    cout << m_spin[j] << endl;
-    cout << periodic(j-1) << endl;
-    cout << periodic(j-m_L) << endl;
-    cout << "---------" << endl;
-    m_E -= m_spin[j]*(m_spin[periodic(j-1)] +
-            m_spin[periodic(j-m_L)]);
+    m_deltaE -= m_spin[j]*(m_spin[periodic(j-1)] +
+            m_spin[periodic(m_L - j)]);
   }
-  cout << m_E << endl;
+  mean_values();
 }
 
 void ising2D::metropolis(){
@@ -76,8 +72,8 @@ void ising2D::metropolis(){
     if (rand()/RAND_MAX <= m_w[deltaE+8]) {
       m_spin[index] *= -1; // flip one spin and accept new spin config
       // update energy and magnetization
-      m_M += (double) 2*m_spin[index];
-      m_E += (double) deltaE;
+      m_deltaM = (double) 2*m_spin[index];
+      m_deltaE = (double) deltaE;
       mean_values();
     }
   }
@@ -87,6 +83,7 @@ void ising2D::mean_values(){
   /*
   Updates the mean values
   */
-  m_mean[0] += m_E; m_mean[1] += m_E*m_E;
-  m_mean[2] += m_M; m_mean[3] += m_M*m_M; m_mean[4] += fabs(m_M);
+  m_mean[0] += m_deltaE; m_mean[1] += m_deltaE*m_deltaE;
+  m_mean[2] += m_deltaM; m_mean[3] += m_deltaM*m_deltaM;
+  m_mean[4] += fabs(m_deltaM);
 }
