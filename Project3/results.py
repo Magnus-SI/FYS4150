@@ -54,7 +54,7 @@ def err_plots():
     plt.savefig("figures/err_plots.pdf")
 
 def betaplots():
-    nt = int(1e6)
+    nt = int(1e5)
     n = 2
     betas = np.array([2, 2.01, 2.1, 2.2, 2.5])
     plt.figure()
@@ -183,8 +183,8 @@ def mercury_precession():
     """
     Plots mercury orbit and calculates precession?
     """
-    nt = int(1e7)
-    data = pd.read_csv("data_old/mercury2_2.000_%.3f.txt"%(np.log10(nt)))
+    nt = int(1e5)
+    data = pd.read_csv("data/mercury2_2.000_%.3f.txt"%(np.log10(nt)))
     n = 2
     r, v = mdimarr(data, nt, n)
     r1 = r[:,:nt//100,1]
@@ -206,7 +206,7 @@ def mercury_precession():
     plt.legend(loc="lower left")
     plt.tight_layout()
     plt.axis("equal")
-    #plt.savefig("figures/mercury_classical.pdf")
+    plt.savefig("figures/mercury.pdf")
     plt.show()
     theta1 = np.arctan(y_p1/x_p1)
     theta2 = np.arctan(y_p2/x_p2)

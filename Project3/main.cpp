@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 
   //First explore different values of beta with a fixed sun
   solar_system earth_sun;
-  Nt = 10000;
+  Nt = 100000;
   T = 12e9;
   double betas[6] = {2,2.01,2.1, 2.2, 2.5, 3};
   for (int i = 0; i<6; i++){

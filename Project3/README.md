@@ -11,3 +11,6 @@ then analyse data in results.py. In this script simply call functions of what yo
 > python3 results.py
 
 To increase resolution of the different system, you have to change main.cpp. This is done by changing the variable Nt
+
+Note in particular that beta_plots() and mercury_precission() require n = 10^7 data to generate results from the report but are set to 10^5 points by default when generating data.
+Also note that the final commit is 5 minutes past the deadline because I ran into some merging issues. Hope that is okay.
