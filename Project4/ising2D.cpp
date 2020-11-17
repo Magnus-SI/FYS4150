@@ -11,7 +11,7 @@
 using namespace std;
 
 int ising2D::periodic(int i){
-  return i%(m_L*m_L);
+  return (m_L*m_L - i)%(m_L*m_L);
 }
 
 void ising2D::seed(int s){
@@ -47,9 +47,14 @@ void ising2D::initialize(int L, double temp, double tol){
   }
   //Finding energy
   for(int j=0; j<m_L*m_L; j++){
+    cout << m_spin[j] << endl;
+    cout << periodic(j-1) << endl;
+    cout << periodic(j-m_L) << endl;
+    cout << "---------" << endl;
     m_E -= m_spin[j]*(m_spin[periodic(j-1)] +
             m_spin[periodic(j-m_L)]);
   }
+  cout << m_E << endl;
 }
 
 void ising2D::metropolis(){
@@ -78,11 +83,10 @@ void ising2D::metropolis(){
   }
 }
 
-double *ising2D::mean_values(){
+void ising2D::mean_values(){
   /*
   Updates the mean values
   */
   m_mean[0] += m_E; m_mean[1] += m_E*m_E;
   m_mean[2] += m_M; m_mean[3] += m_M*m_M; m_mean[4] += fabs(m_M);
-  return m_mean;
 }
