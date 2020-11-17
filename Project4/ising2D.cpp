@@ -33,6 +33,9 @@ void ising2D::initialize(int L, double temp, double tol){
   m_E = 0; m_M = 0;
   m_spin = new int[m_L*m_L];
   m_w = new double[17];
+  m_mean = new double[5];
+  //
+  for(int m=0; m<5; m++) m_mean[m] = 0;
   // setup array for possible energy changes
   for( int de =-8; de <= 8; de++) m_w[de+8] = 0;
   for( int de =-8; de <= 8; de+=4) m_w[de+8] = exp(-de/m_T);
@@ -70,24 +73,16 @@ void ising2D::metropolis(){
       // update energy and magnetization
       m_M += (double) 2*m_spin[index];
       m_E += (double) deltaE;
+      mean_values();
     }
   }
 }
 
-void solar_system::write_to_file(string filename)
-{
+double *ising2D::mean_values(){
   /*
-  Stores the positions and velocities in a file
+  Updates the mean values
   */
-  std::stringstream params;
-  params << std::fixed << m_N << "_"<< std::setprecision(3) << m_beta <<"_" <<log10(m_Nt);
-  filename.append(params.str()).append(".txt");
-
-  m_ofile.open(filename);
-  m_ofile << "E,E/s,M,M/s,C_v,C_v/s" << endl;
-  for (int i=0; i<m_Nt*m_N; i++){
-    m_ofile << m_E << "," << m_E/(m_L*m_L) << "," << m_M << "," << m_M/(m_L*m_L) << ","
-    << m_Cv << "," << m_Cv/(m_L*m_L) << endl;
-    }
-  m_ofile.close();
+  m_mean[0] += m_E; m_mean[1] += m_E*m_E;
+  m_mean[2] += m_M; m_mean[3] += m_M*m_M; m_mean[4] += fabs(m_M);
+  return m_mean;
 }

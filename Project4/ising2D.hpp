@@ -17,7 +17,8 @@ public:
   void seed(int s);
   void initialize(int L, double temp, double tol);
   void metropolis();
-  void write_to_file();
+  double *mean_values();
+  double *m_mean;
 
 };
 #endif
