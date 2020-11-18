@@ -18,5 +18,12 @@ def mcplots():
             plt.yscale("log")
             plt.show()
 
+            #1e:
+            plt.figure()
+            plt.title("T = %.2f, tol = %.2f"%(T, tol))
+            E_equi = dat['E'].values[7000:]
+            plt.hist(E_equi, bins = 20)
+            plt.show
+
 if __name__ == "__main__":
     mcplots()

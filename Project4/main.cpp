@@ -17,7 +17,7 @@ void mcice(int L, double temp, double tol){
   ofile <<setw(15) << setprecision(8);
   ising2D my_ising;
   my_ising.initialize(L, temp, tol);
-  for(int mcs=1; mcs<1001; mcs++){
+  for(int mcs=1; mcs<10001; mcs++){
     my_ising.metropolis();
     ofile << mcs << ",";
     my_ising.write_to_file(ofile);
