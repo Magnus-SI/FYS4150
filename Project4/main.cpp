@@ -22,7 +22,7 @@ void mcice(int L, double temp, double tol){
     ofile << mcs << ",";
     my_ising.write_to_file(ofile);
     //cout << (double) my_ising.m_mean[0]/mcs << endl;
-    cout << my_ising.m_accepted << mcs << endl;
+    //cout << my_ising.m_accepted << mcs << endl;
   }
   ofile.close();
 }
@@ -47,6 +47,26 @@ int main(){
   }
 
   //Then look at how results depend on temperature
+  int Tcount = 7;
+  double temps2[Tcount] = {2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3};
+  L = 40;
+
+  ofstream ofile;
+  string filename = "data/tempvars.csv";
+  ofile.open(filename);
+  ofile << "T,E,M,Cv,chi,acptfrac" << endl;
+  ofile <<setw(15) << setprecision(8);
+
+  ising2D my_ising;
+  for (int i = 0; i<Tcount; i++){
+    my_ising.initialize(L, temps2[i], tol);
+    for(int mcs=1; mcs<4001; mcs++){
+      my_ising.metropolis();
+    }
+    ofile << temps2[i] << ",";
+    my_ising.write_to_file(ofile);
+  }
+  ofile.close();
 
   return 0;
 }
