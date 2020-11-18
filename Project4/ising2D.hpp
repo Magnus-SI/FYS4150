@@ -21,6 +21,7 @@ public:
   void mean_values();
   void write_to_file(std::ofstream&);
   double *m_mean;
+  int m_accepted;
 
 };
 #endif

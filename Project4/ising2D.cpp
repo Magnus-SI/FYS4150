@@ -31,6 +31,7 @@ void ising2D::initialize(int L, double temp, double tol){
   m_T = temp; //dimensionless temperature
   m_L = L;
   m_mcs = 0;    //current cycle count
+  m_accepted = 0; //accepted spin config count
   m_deltaE = 0; m_deltaM = 0;
   m_spin = new int[m_L*m_L];
   m_w = new double[17];
@@ -58,6 +59,7 @@ void ising2D::metropolis(){
   /*
   Metropolis algorithm
   */
+  m_accepted = 0;
   int ix = rand()/RAND_MAX*m_L;
   int iy = rand()/RAND_MAX*m_L;
   for(int k=0; k<m_L*m_L; k++){
@@ -76,6 +78,7 @@ void ising2D::metropolis(){
       m_deltaM = (double) 2*m_spin[index];
       m_deltaE = (double) deltaE;
       mean_values();
+      m_accepted++;
     }
   }
   m_mcs++;
@@ -96,5 +99,6 @@ void ising2D::write_to_file(std::ofstream& ofile){
   */
   double Cv = pow(m_T, -2) * (m_mean[1]/m_mcs - pow(m_mean[0]/m_mcs, 2));
   double chi = pow(m_T, -1) * (m_mean[3]/m_mcs - pow(m_mean[2]/m_mcs, 2));
-  ofile << m_mean[0]/m_mcs << "," << m_mean[4]/m_mcs << "," << Cv << "," << chi << endl;
+  ofile << m_mean[0]/m_mcs << "," << m_mean[4]/m_mcs << "," << Cv << "," << chi
+  << "," << m_accepted/(m_L*m_L) << endl;
 }

@@ -13,7 +13,7 @@ void mcice(int L, double temp, double tol){
   filename.append(params.str()).append(".csv");
   ofstream ofile;
   ofile.open(filename);
-  ofile << "mc,E,M,Cv,chi" << endl;
+  ofile << "mc,E,M,Cv,chi,acptfrac" << endl;
   ofile <<setw(15) << setprecision(8);
   ising2D my_ising;
   my_ising.initialize(L, temp, tol);
@@ -22,6 +22,7 @@ void mcice(int L, double temp, double tol){
     ofile << mcs << ",";
     my_ising.write_to_file(ofile);
     //cout << (double) my_ising.m_mean[0]/mcs << endl;
+    cout << my_ising.m_accepted << mcs << endl;
   }
   ofile.close();
 }
@@ -44,6 +45,7 @@ int main(){
       mcice(L, temps[i], tols[j]);
     }
   }
+
   //Then look at how results depend on temperature
 
   return 0;
