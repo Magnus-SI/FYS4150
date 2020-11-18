@@ -12,7 +12,7 @@ protected:
   double m_deltaE, m_deltaM, C_v, m_chi;
   int *m_spin;
   double *m_w;
-  int periodic(int i);
+
 
 public:
   void seed(int s);
@@ -20,6 +20,7 @@ public:
   void metropolis();
   void mean_values();
   void write_to_file(std::ofstream&);
+  int periodic(int i);
   double *m_mean;
   int m_accepted;
 

@@ -17,7 +17,7 @@ void mcice(int L, double temp, double tol){
   ofile <<setw(15) << setprecision(8);
   ising2D my_ising;
   my_ising.initialize(L, temp, tol);
-  for(int mcs=1; mcs<10001; mcs++){
+  for(int mcs=1; mcs<10011; mcs++){
     my_ising.metropolis();
     ofile << mcs << ",";
     my_ising.write_to_file(ofile);
@@ -33,9 +33,17 @@ int main(){
   //First test for how average values evolve with metropolis cycles
   //this could perhaps be put into a test function
 
-  int L = 2; double temp = 1.0; double tol = 0.0;
+  int L = 2; double temp = 1.0; double tol = 0.5;
   mcice(L, temp, tol);
 
+  /*
+  ising2D my_ising;
+  L = 10;
+  my_ising.initialize(L, temp, tol);
+  cout << my_ising.periodic(0) << " " << my_ising.periodic(30) << " " << my_ising.periodic(60) << " " << my_ising.periodic(99) << " " << my_ising.periodic(100) << " " << my_ising.periodic(-5) << " " << my_ising.periodic(109) <<endl;
+  */
+
+  /*
   //Now use study further temp and tol-dependence for L = 20
   L = 20;
   double temps[2] = {1.0, 2.4};
@@ -67,6 +75,7 @@ int main(){
     my_ising.write_to_file(ofile);
   }
   ofile.close();
+  */
 
   return 0;
 }
