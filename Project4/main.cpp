@@ -36,12 +36,12 @@ int main(){
   int L = 2; double temp = 1.0; double tol = 0.5;
   mcice(L, temp, tol);
 
-  /*
+
   ising2D my_ising;
   L = 10;
   my_ising.initialize(L, temp, tol);
-  cout << my_ising.periodic(0) << " " << my_ising.periodic(30) << " " << my_ising.periodic(60) << " " << my_ising.periodic(99) << " " << my_ising.periodic(100) << " " << my_ising.periodic(-5) << " " << my_ising.periodic(109) <<endl;
-  */
+  cout << my_ising.periodic(0, 0, 1) << " " << my_ising.periodic(39, 1, 0) << " " << my_ising.periodic(60, -1, 0) << " " << my_ising.periodic(99, 0, 0) << " " << my_ising.periodic(99, 1, 0) << " " << my_ising.periodic(4, 0, -1) << " " << my_ising.periodic(99, 0, 1) <<endl;
+
 
   /*
   //Now use study further temp and tol-dependence for L = 20
@@ -76,6 +76,7 @@ int main(){
   }
   ofile.close();
   */
+
 
   return 0;
 }

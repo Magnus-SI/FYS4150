@@ -17,9 +17,24 @@ int ising2D::periodic(int i){
 }
 */
 
+/*
 int ising2D::periodic(int i){
   if (i>=0) return i%(m_L*m_L);
   else return -i%(m_L*m_L);
+}
+
+*/
+int ising2D::periodic(int i, int ixshift, int iyshift){
+  int ix = i%m_L;
+  int iy = i/m_L;
+  ix += m_L + ixshift;
+  //cout << ix - m_L << endl;
+  iy += m_L + iyshift;
+  //cout << ix << " " << ix%m_L << endl;
+  //cout << iy << " " << iy%m_L << " " << m_L * iy%m_L << endl;
+
+  //cout << ix << " " << iy << endl;
+  return (ix%m_L) + m_L * (iy%m_L);
 }
 
 
@@ -41,6 +56,7 @@ void ising2D::initialize(int L, double temp, double tol){
   m_L = L;
   m_mcs = 0;    //current cycle count
   m_accepted = 0; //accepted spin config count
+  idum = -1;
   m_deltaE = 0; m_deltaM = 0;
   m_spin = new int[m_L*m_L];
   m_w = new double[17];
@@ -53,13 +69,13 @@ void ising2D::initialize(int L, double temp, double tol){
   //Settin up spin matrix and magnetisation
   for(int i=0; i<m_L*m_L; i++){
     m_spin[i] = 1;
-    if((float) rand()/RAND_MAX < tol) m_spin[i] = -1;
+    if(((float) rand()/RAND_MAX) < tol) m_spin[i] = -1;
     m_deltaM += m_spin[i];
   }
   //Finding energy
   for(int j=0; j<m_L*m_L; j++){
-    m_deltaE -= m_spin[j]*(m_spin[periodic(j-1)] +
-            m_spin[periodic(j - m_L)]);
+    m_deltaE -= m_spin[j]*(m_spin[periodic(j, -1, 0)] +
+            m_spin[periodic(j, 0, -1)]);
   }
   mean_values();
 }
@@ -69,22 +85,27 @@ void ising2D::metropolis(){
   Metropolis algorithm
   */
   m_accepted = 0;
-  float randun;
-  int ix = (float) rand()/RAND_MAX*m_L;
-  int iy = (float) rand()/RAND_MAX*m_L;
+  int index;
+  //int ix = (float) rand()/RAND_MAX*m_L;
+  //int iy = (float) rand()/RAND_MAX*m_L;
   for(int k=0; k<m_L*m_L; k++){
-    int ix = (float) rand()/RAND_MAX*m_L;
-    int iy = (float) rand()/RAND_MAX*m_L;
-    int index = ix + m_L*iy;
+    //int ix = (float) rand()/RAND_MAX*m_L;
+    //int iy = (float) rand()/RAND_MAX*m_L;
+    //cout << ix << "_" << iy << endl;
+    //int index = ix + m_L*iy;
+    index = ((float) rand()/RAND_MAX) * m_L * m_L;
+    //cout << index << endl;
     int deltaE = 2*m_spin[index]
-      *(m_spin[periodic(index-1)]
-      +m_spin[periodic(index+1)]
-      +m_spin[periodic(index-m_L)]
-      +m_spin[periodic(index+m_L)]);
+      *(m_spin[periodic(index, -1, 0)]
+      +m_spin[periodic(index, 1, 0)]
+      +m_spin[periodic(index, 0, -1)]
+      +m_spin[periodic(index, 0, 1)]);
       // Here we perform the Metropolis test
     //cout << rand() << " " << (float) rand()/RAND_MAX << " " << m_w[deltaE + 8] << endl;
-    cout << randun <<  " " << m_w[deltaE + 8] << endl;
+    //cout << (float) rand()/RAND_MAX <<  " " << m_w[deltaE + 8] << endl;
+    //cout << deltaE << endl;
     if (((float) rand()/RAND_MAX) <= m_w[deltaE+8]) {
+    //if (true){
       m_spin[index] *= -1; // flip one spin and accept new spin config
       // update energy and magnetization
       m_deltaM = (double) 2*m_spin[index];
