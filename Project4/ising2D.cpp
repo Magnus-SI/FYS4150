@@ -94,7 +94,7 @@ void ising2D::write_to_file(std::ofstream& ofile){
   /*
   Store quantities in a file
   */
-  double Cv = pow(m_T, -2) * (m_mean[1] - pow(m_mean[0], 2));
-  double chi = pow(m_T, -1) * (m_mean[3] - pow(m_mean[2], 2));
-  ofile << m_mean[0]/m_mcs << "," << m_mean[4]/m_mcs << "," << Cv/m_mcs << "," << chi/m_mcs << endl;
+  double Cv = pow(m_T, -2) * (m_mean[1]/m_mcs - pow(m_mean[0]/m_mcs, 2));
+  double chi = pow(m_T, -1) * (m_mean[3]/m_mcs - pow(m_mean[2]/m_mcs, 2));
+  ofile << m_mean[0]/m_mcs << "," << m_mean[4]/m_mcs << "," << Cv << "," << chi << endl;
 }

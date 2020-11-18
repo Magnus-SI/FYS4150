@@ -10,7 +10,7 @@ int main(){
 
 
   //First test for how average values evolve with metropolis cycles
-  string filename = "f1.txt";
+  string filename = "f1.csv";
   ofstream ofile;
   ofile.open(filename);
   ofile << "mc,E,M,Cv,chi" << endl;
@@ -21,7 +21,7 @@ int main(){
   my_ising.initialize(L, temp, tol);
   for(int mcs=1; mcs<1001; mcs++){
     my_ising.metropolis();
-    ofile << mcs;
+    ofile << mcs << ",";
     my_ising.write_to_file(ofile);
     //cout << (double) my_ising.m_mean[0]/mcs << endl;
   }
