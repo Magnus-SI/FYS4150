@@ -16,11 +16,13 @@ void mcice(int L, double temp, double tol){
   ofile << "mc,E,M,Cv,chi,acptfrac" << endl;
   ofile <<setw(15) << setprecision(8);
   ising2D my_ising;
+  my_ising.seed(0);
   my_ising.initialize(L, temp, tol);
-  for(int mcs=1; mcs<10011; mcs++){
+  for(int mcs=1; mcs<10001; mcs++){
     my_ising.metropolis();
     ofile << mcs << ",";
     my_ising.write_to_file(ofile);
+    cout << my_ising.m_mean[0]/(double)mcs << endl;
     //cout << (double) my_ising.m_mean[0]/mcs << endl;
     //cout << my_ising.m_accepted << mcs << endl;
   }
@@ -40,7 +42,10 @@ int main(){
   ising2D my_ising;
   L = 10;
   my_ising.initialize(L, temp, tol);
-  cout << my_ising.periodic(0, 0, 1) << " " << my_ising.periodic(39, 1, 0) << " " << my_ising.periodic(60, -1, 0) << " " << my_ising.periodic(99, 0, 0) << " " << my_ising.periodic(99, 1, 0) << " " << my_ising.periodic(4, 0, -1) << " " << my_ising.periodic(99, 0, 1) <<endl;
+  cout << my_ising.periodic(0, 0, 1) << " " << my_ising.periodic(39, 1, 0)
+  << " " << my_ising.periodic(60, -1, 0) << " " << my_ising.periodic(99, 0, 0)
+  << " " << my_ising.periodic(99, 1, 0) << " " << my_ising.periodic(4, 0, -1)
+  << " " << my_ising.periodic(99, 0, 1) <<endl;
 
 
   /*
