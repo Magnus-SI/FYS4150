@@ -6,26 +6,28 @@
 #include <string>
 #include <sstream>
 
-void mcice(int L, double temp, double tol){
-  std::stringstream params;
-  params << std::fixed << L << "_"<< std::setprecision(2) << temp <<"_" << tol;
+using namespace std;
+
+void mcice(int L, double temp, double tol, int mcs_max){
+  stringstream params;
+  params << fixed << L << "_" << setprecision(2) << temp << "_" << tol;
   string filename = "data/mcdep_";
   filename.append(params.str()).append(".csv");
   ofstream ofile;
   ofile.open(filename);
-  ofile << "mc,E,M,Cv,chi,acptfrac" << endl;
-  ofile <<setw(15) << setprecision(8);
+  ofile << "mcs,E,M,acpt" << endl;
+  ofile << setw(15) << setprecision(8);
   ising2D my_ising;
   my_ising.seed(0);
   my_ising.initialize(L, temp, tol);
-  for(int mcs=1; mcs<10001; mcs++){
+  for(int mcs=0; mcs<mcs_max; mcs++){
     my_ising.metropolis();
-    ofile << mcs << ",";
     my_ising.write_to_file(ofile);
-    cout << my_ising.m_mean[0]/(double)mcs << endl;
-    //cout << (double) my_ising.m_mean[0]/mcs << endl;
-    //cout << my_ising.m_accepted << mcs << endl;
   }
+  //cout << my_ising.m_mean[0]/((double)90000*L*L) << endl;
+  //cout << my_ising.m_accepted << endl;
+  /*cout << my_ising.m_0 << " " << my_ising.m_1 << " " << my_ising.m_2
+  << " " << my_ising.m_3 << endl;*/
   ofile.close();
 }
 
@@ -35,17 +37,15 @@ int main(){
   //First test for how average values evolve with metropolis cycles
   //this could perhaps be put into a test function
 
-  int L = 2; double temp = 1.0; double tol = 0.5;
-  mcice(L, temp, tol);
+  int L = 2; double temp = 2.4; double tol = 0.5;
+  mcice(L, temp, tol, 10000);
 
 
-  ising2D my_ising;
-  L = 10;
-  my_ising.initialize(L, temp, tol);
-  cout << my_ising.periodic(0, 0, 1) << " " << my_ising.periodic(39, 1, 0)
-  << " " << my_ising.periodic(60, -1, 0) << " " << my_ising.periodic(99, 0, 0)
-  << " " << my_ising.periodic(99, 1, 0) << " " << my_ising.periodic(4, 0, -1)
-  << " " << my_ising.periodic(99, 0, 1) <<endl;
+  //L = 2;
+  //my_ising.initialize(L, temp, tol, 10000);
+  /*cout << my_ising.periodic(3, 0, 1) << " " << my_ising.periodic(3, 1, 0)
+  << " " << my_ising.periodic(3, 0, -1) << " " << my_ising.periodic(3, -1, 0)
+  << endl;*/
 
 
   /*

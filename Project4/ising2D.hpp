@@ -7,24 +7,22 @@ using namespace std;
 class ising2D {
 
 protected:
-  int m_L, m_T;
-  int m_mcs;
-  double m_E, m_M, C_v, m_chi;
+  int m_L, m_mcs;
+  double m_M, m_E, C_v, m_chi, m_T;
   int *m_spin;
   double *m_w;
-  long idum;
 
 
 public:
   void seed(int s);
   void initialize(int L, double temp, double tol);
   void metropolis();
-  void mean_values();
-  void write_to_file(std::ofstream&);
+  //void mean_values();
+  void write_to_file(ofstream&);
   int periodic(int i, int ixshift, int iyshift);
-  //int periodic2(int i);
-  double *m_mean;
+  //double *m_mean, m_E;
   int m_accepted;
+  //int m_0, m_1, m_2, m_3;
 
 };
 #endif
