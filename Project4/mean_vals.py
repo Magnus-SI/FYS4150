@@ -30,7 +30,7 @@ mcs = data["mcs"]+1
 M = data["M"]
 acpt = data["acpt"]
 
-N = len(acpt)-1
+N = len(mcs)-1
 
 mE = cumsum(E)/mcs
 mM = cumsum(M)/mcs
@@ -41,9 +41,10 @@ mE2 = cumsum(E**2)/mcs
 mM2 = cumsum(M**2)/mcs
 
 sigmaE2 = mE2 - mE**2
+sigmaM2 = mM2 - absM**2
 
-Cv = sigmaE2
-chi = mM2 - absM**2
+Cv = sigmaE2/temp**2
+chi = sigmaM2/temp**2
 
 if random_ordered in ('Y', 'y'):
     test = True
@@ -146,8 +147,12 @@ plt.savefig("figs/acpt_%d_%.2f_%.2f.pdf"%(L, temp, tol))
 plt.close()
 
 plt.figure("prob")
-counts, bins = np.histogram(E/L**2, bins=int((E.max()-E.min())/4)+1)
-plt.hist(bins[:-1], bins, weights=counts/(N+1))
+counts, bins = np.histogram(E[200:]/L**2, bins=int((E[200:].max()
+                                                    -E[200:].min())/4)+1)
+plt.hist(bins[:-1], bins, weights=counts/(N-199))
+if temp > 2:
+    plt.axvline(mE[N]/int(L**2)+np.sqrt(sigmaE2[N])/L**2, color="r", ls="--")
+    plt.axvline(mE[N]/int(L**2)-np.sqrt(sigmaE2[N])/L**2, color="r", ls="--")
 plt.xlabel("Energy per spin")
 plt.ylabel("Probability")
 plt.title("Probability distribution")
@@ -167,6 +172,6 @@ print("Mean specific heat per spin: %.7f %.7f %.7f"
       %(Cv[int(N/100)]/int(L**2), Cv[int(N/10)]/int(L**2), Cv[N]/int(L**2)))
 print("Magnetic susceptibility per spin: %.6e %.6e %.6e"
       %(chi[int(N/100)]/int(L**2), chi[int(N/10)]/int(L**2), chi[N]/int(L**2)))
-print("Variance in energy per spin: %.6e %.6e %.6e"
-      %(sigmaE2[int(N/100)]/int(L**2), sigmaE2[int(N/10)]/int(L**2),
-        sigmaE2[N]/int(L**2)))
+print("Standard deviation in energy per spin: %.6f %.6f %.6f"
+      %(np.sqrt(sigmaE2[int(N/100)])/L**2, np.sqrt(sigmaE2[int(N/10)])/L**2,
+        np.sqrt(sigmaE2[N])/L**2))
