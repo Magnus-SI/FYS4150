@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
   //MPI parameters
   int my_rank, numprocs;
   // MPI initializations
-  time1 = clock()
+  time1 = clock();
   MPI_Init (&argc, &argv);
   MPI_Comm_size (MPI_COMM_WORLD, &numprocs);
   MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
@@ -34,7 +34,6 @@ int main(int argc, char* argv[]){
 
   ising2D my_ising;
 
-  ofstream ofile;
   stringstream filedat;
 
   for (int i = my_rank*Tperproc; i < (my_rank+1)*Tperproc; i++){
