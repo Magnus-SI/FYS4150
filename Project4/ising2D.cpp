@@ -41,6 +41,8 @@ void ising2D::initialize(int L, double temp, double tol){
   */
   m_T = temp; //dimensionless temperature
   m_L = L;
+  m_meanstart = 1000000;
+  m_meancount = 0;
   /*m_0 = 0;
   m_1 = 0;
   m_2 = 0;
@@ -50,9 +52,9 @@ void ising2D::initialize(int L, double temp, double tol){
   m_E = 0; m_M = 0;
   m_spin = new int[m_L*m_L];
   m_w = new double[17];
-  //m_mean = new double[5];
+  m_mean = new double[5];
   //
-  //for(int m=0; m<5; m++) m_mean[m] = 0;
+  for(int m=0; m<5; m++) m_mean[m] = 0;
   // setup array for possible energy changes
   for( int de =-8; de <= 8; de++) m_w[de+8] = 0;
   for( int de =-8; de <= 8; de+=4) m_w[de+8] = exp(-de/m_T);
@@ -96,18 +98,32 @@ void ising2D::metropolis(){
     }
   }
   m_mcs++;
+  if(m_mcs>=m_meanstart){
+    mean_values();
+  }
 }
 
-/*void ising2D::mean_values(){
-  //Updates the mean values
+void ising2D::mean_values(){
+  //Updates the per spin mean values
+  m_meancount++;
   m_mean[0] += m_E; m_mean[1] += m_E*m_E;
   m_mean[2] += m_M; m_mean[3] += m_M*m_M;
   m_mean[4] += fabs(m_M);
-}*/
+}
 
 void ising2D::write_to_file(ofstream& ofile){
   /*
   Store quantities in a file
   */
   ofile << m_mcs << "," << m_E << "," << m_M <<  "," << m_accepted << endl;
+}
+
+void ising2D::write_mean(stringstream& filedat){
+
+  double Cv = pow(m_T, -2) * (m_mean[1]/m_meancount - pow(m_mean[0]/m_meancount, 2));
+  double chi = pow(m_T, -1) * (m_mean[3]/m_meancount - pow(m_mean[4]/m_meancount, 2));
+  double ps = (double) 1/(m_L*m_L);  //per spin normalization
+  //cout << ps * m_mean[0]/m_meancount << endl;
+  filedat << ps * m_mean[0]/m_meancount << "," << ps * m_mean[4]/m_meancount
+  << "," << ps * Cv << "," << ps * chi << endl;
 }

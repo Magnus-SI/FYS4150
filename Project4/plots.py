@@ -31,5 +31,35 @@ def mcplots():
             plt.plot(dat['mc'].values, dat['acptfrac'].values)
             plt.show()
 
+def TLvar(quantlabel, plotlabel):
+    Tcount = 16
+    Lcount = 4
+    Tmin = 2
+    Tmax = 2.3
+    Tvals = np.linspace(2, 2.3, Tcount)
+    quant = np.zeros((Lcount, Tcount))
+
+    for i,T in enumerate(Tvals):
+        data = pd.read_csv("data/T%.6fmultiL.csv"%T)
+        quant[:, i] = data[quantlabel].values
+
+    Lvals = data['L'].values
+
+    plt.figure()
+    plt.ylabel(plotlabel)
+    plt.xlabel(r"$k_B T$")
+    for i in range(Lcount):
+        plt.plot(Tvals, quant[i,:], 'x', label = "%ix%i"%(Lvals[i], Lvals[i]))
+    plt.legend()
+    plt.show()
+
+def Tcestim():
+    #Gonna use cubic splines here.
+    pass
+
 if __name__ == "__main__":
-    mcplots()
+    #mcplots()
+    TLvar('E', r"$E/\rm{J}$")
+    TLvar('M', r'$\langle | M | \rangle$')
+    TLvar('Cv', r'$C_V / \rm{Jk_B}$')
+    TLvar('chi', r'$\chi$')
