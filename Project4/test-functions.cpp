@@ -27,8 +27,8 @@ TEST_CASE("Project 4 analytic"){
   double C_v, chi;
   C_v = E2 - E*E;
   chi = M2 - absM*absM;
-  REQUIRE(E/E_func(temp, 1) == Approx(1).epsilon(1e-2));
-  REQUIRE(absM/absM_func(temp, 1) == Approx(1).epsilon(1e-2));
+  REQUIRE(E/E_func(temp, 1) == Approx(1).epsilon(1e-4));
+  REQUIRE(absM/absM_func(temp, 1) == Approx(1).epsilon(1e-4));
   REQUIRE(C_v/Cv_func(temp, 1) == Approx(1).epsilon(1e-2));
   REQUIRE(chi/chi_func(temp, 1) == Approx(1).epsilon(1e-2));
 }
