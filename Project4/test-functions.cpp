@@ -33,6 +33,20 @@ TEST_CASE("Project 4 analytic"){
   REQUIRE(chi/chi_func(temp, 1) == Approx(1).epsilon(1e-2));
 }
 
+TEST_CASE("Project 4 periodic"){
+  //Testing periodic boundary conditions for 20x20 lattice
+  //Checking if neighbours of index 19 are correct. (0,20) in matric coord.
+  int L = 20;
+  double temp = 1.0, tol = 0;
+  ising2D test_ising2;
+  test_ising2.seed(-1);
+  test_ising2.initialize(L, temp, tol);
+  REQUIRE(test_ising2.periodic(19,1,0) == 0);
+  REQUIRE(test_ising2.periodic(19,-1,0) == 18);
+  REQUIRE(test_ising2.periodic(19,0,1) == 39);
+  REQUIRE(test_ising2.periodic(19,0,-1) == L*L-1);
+}
+
 double Z(double temp, double J){
   return 4*cosh(8*J/temp) + 12;
 }
