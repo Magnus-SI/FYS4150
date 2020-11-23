@@ -41,7 +41,7 @@ void ising2D::initialize(int L, double temp, double tol){
   */
   m_T = temp; //dimensionless temperature
   m_L = L;
-  m_meanstart = 1000000;
+  m_meanstart = 50000;
   m_meancount = 0;
   /*m_0 = 0;
   m_1 = 0;
