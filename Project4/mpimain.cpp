@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
   //Customizable parameters:
   int Tperproc = 2;
   double tol = 0.5;
-  int mcs_max = 2000000;
+  int mcs_max = 4000000;
 
   //MPI parameters
   int my_rank, numprocs;
@@ -36,12 +36,11 @@ int main(int argc, char* argv[]){
   MPI_Init (&argc, &argv);
   MPI_Comm_size (MPI_COMM_WORLD, &numprocs);
   MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
-  int Tcount = numprocs * 2;
 
   //Temperaturer and Length values
   double dT, Tmax, Tmin, T;
   //int L;
-  Tmin = 2.0; Tmax = 2.3;
+  Tmin = 2.2; Tmax = 2.35;
   dT = (Tmax - Tmin) / (Tperproc * numprocs - 1);
   int Ls[4] = {40, 60, 80, 100};
 
