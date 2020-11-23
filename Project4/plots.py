@@ -102,6 +102,24 @@ def Tcestim():
     plt.show()
     print(stderr)
 
+def timerplots():
+    timerdat = pd.read_csv("data/timer.csv")
+    Lvals = timerdat['L'].values
+    pc_count = timerdat['npcs'].values
+    t = timerdat['time'].values
+    Lcount = len(np.unique(L))
+    pcrange = np.linspace(1, 8, 71)
+    plt.figure()
+    for i in range(Lcount):
+        pcL = pc_count[i::Lcount]
+        tL = t[i::Lcount]
+        plt.plot(pcL, tL, "x", label = "%ix%i"%(Lvals[i], Lvals[i]))
+        plt.plot(pcrange, tL[0]/pcrange, label = "Expected time reduction")
+    plt.legend()
+    plt.xlabel("Processor count")
+    plt.ylabel("time[s]")
+    plt.show()
+
 
 
 if __name__ == "__main__":
