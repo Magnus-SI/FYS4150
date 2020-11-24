@@ -8,7 +8,7 @@ If you want to run our programs, we recommend to study the 2x2 and 20x20 lattice
 make all
 ```
 
-which writes results to file.
+which writes results to file and runs test functions. The test functions checks that the 2x2 lattice checks out with the analytic case, and tests the periodic boundary conditions.
 
 To analyse the results, use the python script mean_vals by running the command 
 
