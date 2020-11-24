@@ -32,4 +32,4 @@ mpic++ -O2 -o mmain.out mpimain.cpp
 mpiexec mmain.out
 ```
 
-It is currently set to the [2.2, 2.35] temperature interval with 4 million Monte Carlo cycles, which takes 2-3 hours to run on 8 cores. 
+It is currently set to the [2.2, 2.35] temperature interval with 4 million Monte Carlo cycles, which takes 2-3 hours to run on 8 cores. For a quicker test run, you can change mcs_max on line 32 to 40000, and my_ising.m_meanstart to 20000 on line 17. (Note that the data in the data-folder will be overwritten).
