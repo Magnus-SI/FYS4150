@@ -17,7 +17,7 @@ mpl.rcParams['axes.prop_cycle'] = cycler(color='bgrcmyk')
 
 L = float(input("Dimension of spin matrix: "))
 temp = float(input("Temperature: "))
-tol = float(input("Configuration [0,1]: "))
+tol = float(input("Configuration (0 or 0.5): "))
 
 random_ordered = input("Add another configuration: [Y/n]: ")
 test = False
@@ -48,7 +48,7 @@ chi = sigmaM2/temp**2
 
 if random_ordered in ('Y', 'y'):
     test = True
-    tol2 = float(input("Configuration [0,1]: "))
+    tol2 = float(input("Configuration (0 or 0.5): "))
     data2 = pd.read_csv("data/mcdep_%d_%.2f_%.2f.csv"%(L, temp, tol2))
 
     E_2 = data2["E"]

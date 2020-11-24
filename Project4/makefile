@@ -5,5 +5,5 @@ compile:
 	c++	-o	tests.out	tests-main.cpp	test-functions.cpp ising2D.cpp
 
 execute:
-	./main.out
 	./tests.out
+	./main.out

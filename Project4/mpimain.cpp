@@ -14,6 +14,7 @@ void run_ising(stringstream& filedat, int L, double temp, double tol, int mcs_ma
   ising2D my_ising;
   my_ising.seed(seed);
   my_ising.initialize(L, temp, tol);
+  my_ising.m_meanstart = 1000000;     //start counting mean after 1 million cycles.
   for(int mcs=0; mcs<mcs_max; mcs++){
     my_ising.metropolis();
   }
@@ -44,8 +45,6 @@ int main(int argc, char* argv[]){
   dT = (Tmax - Tmin) / (Tperproc * numprocs - 1);
   int Ls[4] = {40, 60, 80, 100};
 
-  ising2D my_ising;
-
   ofstream ofile;
   stringstream filedat;
 
@@ -53,7 +52,7 @@ int main(int argc, char* argv[]){
     //cout << my_rank << " "<< i << endl;
     T = Tmin + i * dT;
     filedat = file_stuff(Ls, T, tol, mcs_max, i);
-
+    //Ensure no file overwriting:
     #pragma omp critical
     ofile.open("data/T" + to_string(T) + "multiL.csv"); ofile << filedat.rdbuf(); ofile.close();
     }

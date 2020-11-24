@@ -41,12 +41,9 @@ void ising2D::initialize(int L, double temp, double tol){
   */
   m_T = temp; //dimensionless temperature
   m_L = L;
-  m_meanstart = 50000;
+  m_meanstart = 50000;  //start counting mean values here
   m_meancount = 0;
-  /*m_0 = 0;
-  m_1 = 0;
-  m_2 = 0;
-  m_3 = 0;*/
+
   m_mcs = 0;    //current cycle count
   m_accepted = 0; //accepted spin config count
   m_E = 0; m_M = 0;
@@ -78,11 +75,7 @@ void ising2D::metropolis(){
   int index;
   for(int k=0; k<m_L*m_L; k++){
     index = ((float) rand()/RAND_MAX) * m_L * m_L;
-    //Calculating instances of each index to check uniform distribution
-    /*if(index == 0) m_0++;
-    if(index == 1) m_1++;
-    if(index == 2) m_2++;
-    if(index == 3) m_3++;*/
+
     int deltaE = 2*m_spin[index]
       *(m_spin[periodic(index, -1, 0)]
       +m_spin[periodic(index, 1, 0)]
@@ -119,7 +112,9 @@ void ising2D::write_to_file(ofstream& ofile){
 }
 
 void ising2D::write_mean(stringstream& filedat){
-
+  /*
+  Write per spin mean values to file
+  */
   double Cv = pow(m_T, -2) * (m_mean[1]/m_meancount - pow(m_mean[0]/m_meancount, 2));
   double chi = pow(m_T, -1) * (m_mean[3]/m_meancount - pow(m_mean[4]/m_meancount, 2));
   double ps = (double) 1/(m_L*m_L);  //per spin normalization
