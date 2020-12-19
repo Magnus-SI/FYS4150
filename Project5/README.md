@@ -12,3 +12,5 @@ Also note that the generated litosphere is set to run with 0.025 delta x instead
 If wanted, it shouldn't take too long to run with 0.01 instead. Then dx must also be changed to 0.01 in the plotlitosphere function in plots.py.
 Although 0.01 shouldn't take too much time either.
 
+
+The figures folder contain pre-generated figures and the data folder contains pre-generated data. If wanted, plots.py can then be run without compiling anything else.
